@@ -3,7 +3,6 @@ import List from "./components/List";
 import getId from "@/lib/getId";
 import getTasks from "@/lib/getTasks";
 import getProjects from "@/lib/getProjects";
-import containers from "@styles/containers.module.css";
 import buttons from "@styles/buttons.module.css";
 
 export default async function Home() {

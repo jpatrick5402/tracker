@@ -69,7 +69,7 @@ export default function List({
         </ul>
         <button
           className={`${buttons.add} m-auto`}
-          onClick={(e) => {
+          onClick={() => {
             setItemList((prev) => [...prev, {}]);
           }}
         >
