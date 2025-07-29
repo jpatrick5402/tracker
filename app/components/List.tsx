@@ -1,7 +1,7 @@
 import text from "@styles/text.module.css";
 
 interface ListItem {
-  id: string;
+  id?: string;
   [key: string]: string | undefined;
 }
 
