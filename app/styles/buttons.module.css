@@ -1,10 +1,18 @@
 .default {
   background-color: var(--color-button-default);
-  padding: 10px;
+  padding: var(--rounding);
+  cursor: pointer;
+}
+
+.add {
+  background-color: var(--color-button-add);
+  padding: var(--rounding);
+  cursor: pointer;
 }
 
 .auth {
   background-color: var(--color-button-auth);
   padding: 10px;
   border-radius: var(--rounding);
+  cursor: pointer;
 }

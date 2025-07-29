@@ -1,4 +1,7 @@
+"use client";
 import text from "@styles/text.module.css";
+import buttons from "@styles/buttons.module.css";
+import { useState } from "react";
 
 interface ListItem {
   id?: string;
@@ -7,25 +10,72 @@ interface ListItem {
 
 export default function List({
   items,
-  title,
+  columns,
+  type,
 }: {
   items: ListItem[];
-  title?: string;
+  columns: string[];
+  type: string;
 }) {
+  const [itemList, setItemList] = useState(items);
+
   return (
-    <div className="w-full bg-gray-400">
-      <p className={`${text.heading} text-center`}>{title}</p>
-      {items.map((item, i) => {
-        return (
-          <li key={i}>
-            {Object.keys(item).map((key, i2) => {
-              return key != "id" ? (
-                <input type="text" defaultValue={item[key]} key={i2} />
-              ) : null;
+    <div className="w-full flex-col items-center">
+      <p className={`${text.heading} text-center`}>My {type}s</p>
+      <div className="flex flex-col">
+        <ul className="m-auto grid">
+          <li>
+            {columns.map((column) => {
+              return (
+                <input
+                  className="border-1"
+                  key={column}
+                  type="text"
+                  readOnly={true}
+                  defaultValue={
+                    column.charAt(0).toUpperCase() + column.slice(1)
+                  }
+                />
+              );
             })}
           </li>
-        );
-      })}
+          {itemList.map((item, i) => {
+            return (
+              <li key={i}>
+                {columns.map((column, i2) => {
+                  return (
+                    <input
+                      type="text"
+                      value={item[column]}
+                      key={i2}
+                      className="border-1"
+                      onChange={(e) => {
+                        setItemList((prev) =>
+                          prev.map((item, index) => {
+                            if (index !== i) return item;
+                            return {
+                              ...item,
+                              [column]: e.target.value,
+                            };
+                          })
+                        );
+                      }}
+                    />
+                  );
+                })}
+              </li>
+            );
+          })}
+        </ul>
+        <button
+          className={`${buttons.add} m-auto`}
+          onClick={(e) => {
+            setItemList((prev) => [...prev, {}]);
+          }}
+        >
+          Add {type}
+        </button>
+      </div>
     </div>
   );
 }

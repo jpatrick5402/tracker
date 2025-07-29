@@ -24,11 +24,18 @@ export default async function Home() {
       >
         <button className={`${buttons.auth}`}>Sign Out</button>
       </form>
-      <p>This is where tasks & projects will show up {session?.user?.name}</p>
-      <div className={`${containers.split}`}>
-        <List title="My Tasks" items={tasks} />
-        <List title="My Projects" items={projects} />
-      </div>
+      <span className="flex">
+        <List
+          type="project"
+          items={projects}
+          columns={["name", "description"]}
+        />
+        <List
+          type="task"
+          items={tasks}
+          columns={["name", "description", "status"]}
+        />
+      </span>
     </div>
   );
 }
