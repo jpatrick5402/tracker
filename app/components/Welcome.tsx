@@ -1,4 +1,4 @@
-import SignIn from "@components/SignIn";
+import SignIn from "@/app/components/SignIn";
 import containers from "@styles/containers.module.css";
 import text from "@styles/text.module.css";
 

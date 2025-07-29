@@ -1,0 +1,10 @@
+.default {
+  background-color: var(--color-button-default);
+  padding: 10px;
+}
+
+.auth {
+  background-color: var(--color-button-auth);
+  padding: 10px;
+  border-radius: var(--rounding);
+}

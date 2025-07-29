@@ -4,12 +4,16 @@
   --background: #ffffff;
   --foreground: #171717;
   --rounding: 10px;
+  --color-button-default: #b15555;
+  --color-button-auth: #ff5d5d;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --color-button-default: #550000;
+    --color-button-auth: #880000;
   }
 }
 

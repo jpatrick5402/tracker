@@ -3,7 +3,7 @@ import buttons from "@styles/buttons.module.css";
 
 export default function SignIn() {
   return (
-    <form>
+    <form className="m-2">
       <button
         className={`${buttons.auth}`}
         type="button"
