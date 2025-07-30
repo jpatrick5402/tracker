@@ -77,7 +77,7 @@ export default function List({
         </button>
       </div>
       <button
-        onClick={(e) => {
+        onClick={() => {
           save({ [type]: itemList });
         }}
       >

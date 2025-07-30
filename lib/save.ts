@@ -1,4 +1,4 @@
-export default async function save(inputObject: Object) {
+export default async function save(inputObject: object) {
   return await fetch("/api/save", {
     method: "POST",
     headers: {
