@@ -1,7 +1,7 @@
 "use client";
 import text from "@styles/text.module.css";
 import buttons from "@styles/buttons.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import save from "@/lib/save";
 
 interface ListItem {
@@ -18,6 +18,13 @@ export default function List({
   type: string;
 }) {
   const [itemList, setItemList] = useState(items);
+
+  useEffect(() => {
+    async function saveList(itemList: ListItem[], type: string) {
+      await save({ [type]: itemList });
+    }
+    saveList(itemList, type);
+  }, [itemList, type]);
 
   return (
     <div className="w-full flex-col items-center">
@@ -69,20 +76,14 @@ export default function List({
         </ul>
         <button
           className={`${buttons.add} m-auto`}
-          onClick={() => {
-            setItemList((prev) => [...prev, {}]);
+          onClick={async () => {
+            await save({ [type]: [...itemList, {}] });
+            location.reload();
           }}
         >
           Add {type}
         </button>
       </div>
-      <button
-        onClick={() => {
-          save({ [type]: itemList });
-        }}
-      >
-        Save
-      </button>
     </div>
   );
 }
