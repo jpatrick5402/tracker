@@ -2,17 +2,12 @@
 import { useState, useTransition, useRef } from "react";
 import { saveItem } from "@/lib/save";
 
-interface ListItem {
-  id: string;
-  [key: string]: string | undefined;
-}
-
 export default function List({
   items,
   columns,
   type,
 }: {
-  items: ListItem[];
+  items: Record<string, any>[];
   columns: string[];
   type: "task" | "project";
 }) {
@@ -25,15 +20,15 @@ export default function List({
       i === index ? { ...item, [column]: value } : item
     );
     setItemList(updatedList);
-    
+
     const itemToUpdate = updatedList[index];
     const itemId = itemToUpdate.id;
-    
+
     // Clear existing timeout for this item
     if (saveTimeouts.current[itemId]) {
       clearTimeout(saveTimeouts.current[itemId]);
     }
-    
+
     // Set new timeout for debounced save
     saveTimeouts.current[itemId] = setTimeout(() => {
       startTransition(async () => {
@@ -78,7 +73,11 @@ export default function List({
   };
 
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 transition-opacity ${isPending ? 'opacity-50' : 'opacity-100'}`}>
+    <div
+      className={`bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 transition-opacity ${
+        isPending ? "opacity-50" : "opacity-100"
+      }`}
+    >
       <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 capitalize">
         My {type}s
       </h2>
@@ -98,14 +97,19 @@ export default function List({
           </thead>
           <tbody>
             {itemList.map((item, i) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" key={item.id}>
+              <tr
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                key={item.id}
+              >
                 {columns.map((column, i2) => (
                   <td className="px-6 py-4" key={i2}>
                     <input
                       type="text"
-                      value={item[column] || ''}
+                      value={item[column] || ""}
                       className="w-full bg-transparent border-none focus:ring-0 dark:text-white"
-                      onChange={(e) => handleInputChange(i, column, e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(i, column, e.target.value)
+                      }
                     />
                   </td>
                 ))}
@@ -115,8 +119,18 @@ export default function List({
                     onClick={() => handleDeleteItem(i)}
                     title={`Delete ${type}`}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
                     </svg>
                   </button>
                 </td>
@@ -131,7 +145,7 @@ export default function List({
           onClick={handleAddItem}
           disabled={isPending}
         >
-          {isPending ? 'Adding...' : `Add ${type}`}
+          {isPending ? "Adding..." : `Add ${type}`}
         </button>
       </div>
     </div>
