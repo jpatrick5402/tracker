@@ -2,9 +2,9 @@
 import text from "@styles/text.module.css";
 import buttons from "@styles/buttons.module.css";
 import { useState } from "react";
+import save from "@/lib/save";
 
 interface ListItem {
-  id?: string;
   [key: string]: string | undefined;
 }
 
@@ -76,6 +76,13 @@ export default function List({
           Add {type}
         </button>
       </div>
+      <button
+        onClick={(e) => {
+          save({ [type]: itemList });
+        }}
+      >
+        Save
+      </button>
     </div>
   );
 }
