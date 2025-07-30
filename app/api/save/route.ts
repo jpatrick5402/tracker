@@ -10,8 +10,8 @@ interface ItemData {
 }
 
 interface RequestBody {
-  action: 'create' | 'update' | 'delete';
-  type: 'task' | 'project';
+  action: "create" | "update" | "delete";
+  type: "task" | "project";
   data?: ItemData;
   id?: string;
 }
@@ -31,7 +31,8 @@ export const POST = auth(async function POST(req) {
     const { action, type, data, id }: RequestBody = await req.json();
 
     // Get user ID using parameterized query
-    const userResult = await sql`SELECT id FROM users WHERE email = ${req.auth.user.email}`;
+    const userResult =
+      await sql`SELECT id FROM users WHERE email = ${req.auth.user.email}`;
     if (userResult.length === 0) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
@@ -40,11 +41,13 @@ export const POST = auth(async function POST(req) {
     let result;
 
     switch (action) {
-      case 'create':
-        if (type === 'task') {
+      case "create":
+        if (type === "task") {
           result = await sql`
             INSERT INTO tasks (name, description, status) 
-            VALUES (${data?.name || ''}, ${data?.description || ''}, ${data?.status || ''})
+            VALUES (${data?.name || ""}, ${data?.description || ""}, ${
+            data?.status || ""
+          })
             RETURNING *
           `;
           // Link to user
@@ -52,10 +55,10 @@ export const POST = auth(async function POST(req) {
             INSERT INTO users_tasks (user_id, task_id) 
             VALUES (${userId}, ${result[0].id})
           `;
-        } else if (type === 'project') {
+        } else if (type === "project") {
           result = await sql`
             INSERT INTO projects (name, description) 
-            VALUES (${data?.name || ''}, ${data?.description || ''})
+            VALUES (${data?.name || ""}, ${data?.description || ""})
             RETURNING *
           `;
           // Link to user
@@ -66,25 +69,28 @@ export const POST = auth(async function POST(req) {
         }
         break;
 
-      case 'update':
+      case "update":
         if (!id) {
-          return NextResponse.json({ message: "ID required for update" }, { status: 400 });
+          return NextResponse.json(
+            { message: "ID required for update" },
+            { status: 400 }
+          );
         }
-        if (type === 'task') {
+        if (type === "task") {
           result = await sql`
             UPDATE tasks 
-            SET name = ${data?.name || ''}, 
-                description = ${data?.description || ''}, 
-                status = ${data?.status || ''}
+            SET name = ${data?.name || ""}, 
+                description = ${data?.description || ""}, 
+                status = ${data?.status || ""}
             WHERE id = ${id} 
             AND EXISTS (SELECT 1 FROM users_tasks WHERE user_id = ${userId} AND task_id = ${id})
             RETURNING *
           `;
-        } else if (type === 'project') {
+        } else if (type === "project") {
           result = await sql`
             UPDATE projects 
-            SET name = ${data?.name || ''}, 
-                description = ${data?.description || ''}
+            SET name = ${data?.name || ""}, 
+                description = ${data?.description || ""}
             WHERE id = ${id} 
             AND EXISTS (SELECT 1 FROM users_projects WHERE user_id = ${userId} AND project_id = ${id})
             RETURNING *
@@ -92,11 +98,14 @@ export const POST = auth(async function POST(req) {
         }
         break;
 
-      case 'delete':
+      case "delete":
         if (!id) {
-          return NextResponse.json({ message: "ID required for delete" }, { status: 400 });
+          return NextResponse.json(
+            { message: "ID required for delete" },
+            { status: 400 }
+          );
         }
-        if (type === 'task') {
+        if (type === "task") {
           // Delete user association first
           await sql`DELETE FROM users_tasks WHERE user_id = ${userId} AND task_id = ${id}`;
           // Delete task if no other users are associated
@@ -106,7 +115,7 @@ export const POST = auth(async function POST(req) {
             AND NOT EXISTS (SELECT 1 FROM users_tasks WHERE task_id = ${id})
             RETURNING *
           `;
-        } else if (type === 'project') {
+        } else if (type === "project") {
           // Delete user association first
           await sql`DELETE FROM users_projects WHERE user_id = ${userId} AND project_id = ${id}`;
           // Delete project if no other users are associated
@@ -120,16 +129,18 @@ export const POST = auth(async function POST(req) {
         break;
 
       default:
-        return NextResponse.json({ message: "Invalid action" }, { status: 400 });
+        return NextResponse.json(
+          { message: "Invalid action" },
+          { status: 400 }
+        );
     }
 
     return NextResponse.json({
       message: "Operation successful",
-      data: result?.[0] || null
+      data: result?.[0] || null,
     });
-
   } catch (error) {
-    console.error('Database operation failed:', error);
+    console.error("Database operation failed:", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

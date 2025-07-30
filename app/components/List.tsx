@@ -1,6 +1,8 @@
 "use client";
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useMemo } from "react";
 import { saveItem } from "@/lib/save";
+
+type SortDirection = 'asc' | 'desc' | null;
 
 export default function List({
   items,
@@ -13,16 +15,47 @@ export default function List({
 }) {
   const [itemList, setItemList] = useState(items);
   const [isPending, startTransition] = useTransition();
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const saveTimeouts = useRef<Record<string, NodeJS.Timeout>>({});
 
-  const handleInputChange = (index: number, column: string, value: string) => {
-    const updatedList = itemList.map((item, i) =>
-      i === index ? { ...item, [column]: value } : item
+  // Handle column header click for sorting
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      // Toggle sort direction for same column
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // New column, start with ascending
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  // Memoized sorted list
+  const sortedItemList = useMemo(() => {
+    if (!sortColumn || !sortDirection) {
+      return itemList;
+    }
+
+    return [...itemList].sort((a, b) => {
+      const aVal = (a[sortColumn] || '').toString().toLowerCase();
+      const bVal = (b[sortColumn] || '').toString().toLowerCase();
+      
+      if (sortDirection === 'asc') {
+        return aVal.localeCompare(bVal);
+      } else {
+        return bVal.localeCompare(aVal);
+      }
+    });
+  }, [itemList, sortColumn, sortDirection]);
+
+  const handleInputChange = (itemId: string, column: string, value: string) => {
+    const updatedList = itemList.map((item) =>
+      item.id === itemId ? { ...item, [column]: value } : item
     );
     setItemList(updatedList);
 
-    const itemToUpdate = updatedList[index];
-    const itemId = itemToUpdate.id;
+    const itemToUpdate = updatedList.find(item => item.id === itemId);
 
     // Clear existing timeout for this item
     if (saveTimeouts.current[itemId]) {
@@ -86,8 +119,31 @@ export default function List({
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               {columns.map((column) => (
-                <th scope="col" className="px-6 py-3" key={column}>
-                  {column.charAt(0).toUpperCase() + column.slice(1)}
+                <th 
+                  scope="col" 
+                  className="px-6 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 select-none" 
+                  key={column}
+                  onClick={() => handleSort(column)}
+                >
+                  <div className="flex items-center gap-2">
+                    <span>{column.charAt(0).toUpperCase() + column.slice(1)}</span>
+                    <div className="flex flex-col">
+                      <svg 
+                        className={`w-3 h-3 ${sortColumn === column && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'}`} 
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                      </svg>
+                      <svg 
+                        className={`w-3 h-3 -mt-1 ${sortColumn === column && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400'}`} 
+                        fill="currentColor" 
+                        viewBox="0 0 20 20"
+                      >
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
                 </th>
               ))}
               <th scope="col" className="px-6 py-3 text-right">
@@ -96,7 +152,7 @@ export default function List({
             </tr>
           </thead>
           <tbody>
-            {itemList.map((item, i) => (
+            {sortedItemList.map((item) => (
               <tr
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 key={item.id}
@@ -108,7 +164,7 @@ export default function List({
                       value={item[column] || ""}
                       className="w-full bg-transparent border-none focus:ring-0 dark:text-white"
                       onChange={(e) =>
-                        handleInputChange(i, column, e.target.value)
+                        handleInputChange(item.id, column, e.target.value)
                       }
                     />
                   </td>
@@ -116,7 +172,7 @@ export default function List({
                 <td className="px-6 py-4 text-right">
                   <button
                     className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
-                    onClick={() => handleDeleteItem(i)}
+                    onClick={() => handleDeleteItem(itemList.findIndex(i => i.id === item.id))}
                     title={`Delete ${type}`}
                   >
                     <svg
