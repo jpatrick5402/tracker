@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/auth";
-import List from "./components/List";
+import TaskList from "./components/TaskList";
 import getTasks from "@/lib/getTasks";
+import getProjectsTasks from "@/lib/getTasksProjects";
 import getProjects from "@/lib/getProjects";
 
 export default async function Home() {
@@ -8,6 +9,7 @@ export default async function Home() {
 
   if (!session?.user?.email) return null;
   const tasks = await getTasks(session.user.email);
+  const projectsTasks = await getProjectsTasks(session.user.email);
   const projects = await getProjects(session.user.email);
 
   return (
@@ -44,16 +46,12 @@ export default async function Home() {
           </button>
         </form>
       </header>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <List
-          type="project"
-          items={projects}
-          columns={["name", "description"]}
-        />
-        <List
-          type="task"
-          items={tasks}
-          columns={["name", "description", "status"]}
+      <div className="grid gap-8">
+        <TaskList
+          tasks={tasks}
+          projectsTasks={projectsTasks}
+          projects={projects}
+          columns={["name", "description", "status", "project"]}
         />
       </div>
     </div>
