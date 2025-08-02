@@ -2,7 +2,8 @@
 const isLoggedIn = ref(false);
 const links = [
   { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
+  { name: "Tasks", path: "/tasks" },
+  { name: "Projects", path: "/projects" },
 ];
 </script>
 
@@ -32,6 +33,10 @@ html {
   background-color: rgb(182, 182, 182);
 }
 
+body {
+  margin: 0px;
+}
+
 #__nuxt {
   display: flex;
   flex-direction: column;
@@ -50,11 +55,17 @@ html {
 .row {
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
+  flex: 1;
 }
 
 nav {
-  padding: 10px;
+  background-color: bisque;
+  display: flex;
+  flex-direction: column;
+  width: 10%;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
 }
 
 nav ul {
@@ -63,15 +74,18 @@ nav ul {
   list-style-type: none;
   padding: 0px;
   margin: 0px;
+  gap: 10px;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  margin: auto;
+  align-items: center;
+  width: 100%;
 }
 
 footer {
+  background-color: rgb(0, 82, 54);
   display: flex;
   flex-direction: row;
   justify-content: center;
