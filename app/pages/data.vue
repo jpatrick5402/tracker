@@ -1,8 +1,4 @@
 <script setup>
-useFetch("/api/projects", {
-  key: "projectData",
-});
-
 const { data: projects } = useNuxtData("projectData");
 
 async function newProject() {
