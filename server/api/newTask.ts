@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 
-export default defineCachedEventHandler((event) => {
+export default defineEventHandler((event) => {
   const { DB_URL } = useRuntimeConfig(event);
   const sql = neon(DB_URL);
   return sql`
