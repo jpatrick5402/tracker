@@ -1,27 +1,43 @@
 <script setup>
-const data = (await useFetch("/api/data"))["data"];
-</script>
+const {
+  data: projects,
+  refresh,
+  pending,
+} = useAsyncData("myProjects", () => $fetch("/api/projects"));
 
+const newProject = () => {
+  useFetch("/api/newProject");
+  refresh("myProjects");
+};
+
+const newTask = () => {
+  useFetch("/api/newTask");
+  refresh("myProjects");
+};
+</script>
 <template>
-  <h1>My Data</h1>
-  <ul>
-    <li v-for="project in data">
-      <details>
-        <summary>
-          <input :value="project.name" />
-          <input :value="project.description" />
-        </summary>
-        <li v-for="task in project.tasks">
-          <input :value="task.name" />
-          <input :value="task.description" />
-          <input :value="task.status" />
-        </li>
-        <button>Add Task</button>
-      </details>
-    </li>
-    <button>Add Project</button>
-  </ul>
-  <button>Save</button>
+  <p v-if="pending">Loading...</p>
+  <template v-else>
+    <h1>My Data</h1>
+    <ul>
+      <li v-for="project in projects">
+        <details>
+          <summary>
+            <input :value="project.name" />
+            <input :value="project.description" />
+          </summary>
+          <li v-for="task in project.tasks">
+            <input :value="task.name" />
+            <input :value="task.description" />
+            <input :value="task.status" />
+          </li>
+          <button @click="newTask">Add Task</button>
+        </details>
+      </li>
+      <button @click="newProject">Add Project</button>
+    </ul>
+    <button>Save</button>
+  </template>
 </template>
 
 <style>

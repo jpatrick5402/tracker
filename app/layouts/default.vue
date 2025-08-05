@@ -7,6 +7,7 @@ const links = [
 </script>
 
 <template>
+  <NuxtLoadingIndicator />
   <span class="row">
     <nav>
       <button v-if="!isLoggedIn" @click="isLoggedIn = !isLoggedIn">
