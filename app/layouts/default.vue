@@ -9,8 +9,12 @@ const links = [
 <template>
   <NuxtLoadingIndicator />
   <span class="row">
-    <nav>
-      <button v-if="!isLoggedIn" @click="isLoggedIn = !isLoggedIn">
+    <nav class="p-5">
+      <button
+        v-if="!isLoggedIn"
+        @click="isLoggedIn = !isLoggedIn"
+        class="bg-[#002FA7] p-2 rounded-xl"
+      >
         Sign In
       </button>
       <ul>

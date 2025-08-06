@@ -50,31 +50,30 @@ const rotation = ref(270);
   <h1>My Data</h1>
   <ul>
     <li v-for="project in projects">
-      <div class="project">
-        <Icon
-          name="material-symbols:arrow-back-2"
-          @click="rotation = rotation == 180 ? 270 : 180"
-          :style="'rotate: ' + rotation + 'deg;'"
-        />
-        <input :value="project.name" />
-        <input :value="project.description" />
-        <Icon
-          name="material-symbols:delete-forever-outline-rounded"
-          @click="remove(project.id, 'project')"
-        />
-      </div>
-      <div class="ml-10">
-        <li v-for="task in project.tasks">
-          <input :value="task.name" />
-          <input :value="task.description" />
-          <input :value="task.status" />
-          <Icon
-            name="material-symbols:delete-forever-outline-rounded"
-            @click="remove(task.id, 'task')"
-          />
-        </li>
-        <button @click="newTask(project.id)">Add Task</button>
-      </div>
+      <details class="flex m-3 bg-[#002FA7] border-white border-3 rounded-xl">
+        <summary class="flex p-6 m-3">
+          <div>
+            <input :value="project.name" />
+            <input :value="project.description" />
+            <Icon
+              name="material-symbols:delete-forever-outline-rounded"
+              @click="remove(project.id, 'project')"
+            />
+          </div>
+        </summary>
+        <div class="m-3 bg-gray-800 p-4 rounded-xl border-3 border-black">
+          <li v-for="task in project.tasks">
+            <input :value="task.name" />
+            <input :value="task.description" />
+            <input :value="task.status" />
+            <Icon
+              name="material-symbols:delete-forever-outline-rounded"
+              @click="remove(task.id, 'task')"
+            />
+          </li>
+          <button @click="newTask(project.id)">Add Task</button>
+        </div>
+      </details>
     </li>
     <button @click="newProject">Add Project</button>
   </ul>
@@ -82,7 +81,6 @@ const rotation = ref(270);
 
 <style scoped>
 input {
-  border: 1px solid brown;
   border-radius: 10px;
   padding: 6px;
   background-color: #ff4f00;
@@ -90,7 +88,7 @@ input {
 }
 
 button {
-  background-color: blue;
+  background-color: #002fa7;
   border-radius: 10px;
   padding: 6px;
   margin: 3px;
