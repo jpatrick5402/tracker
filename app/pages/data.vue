@@ -1,7 +1,9 @@
-<script setup>
+<script setup lang="ts">
 const { data: projects } = useNuxtData("projectData");
+const { start, finish } = useLoadingIndicator();
 
 async function newProject() {
+  start();
   try {
     await $fetch("/api/newProject", {
       method: "POST",
@@ -10,9 +12,11 @@ async function newProject() {
   } catch (error) {
     console.log(error);
   }
+  finish();
 }
 
-async function newTask(id) {
+async function newTask(id: number) {
+  start();
   try {
     await $fetch("/api/newTask", {
       method: "POST",
@@ -22,9 +26,11 @@ async function newTask(id) {
   } catch (error) {
     console.log(error);
   }
+  finish();
 }
 
-async function remove(objectId, objectType) {
+async function remove(objectId: number, objectType: string) {
+  start();
   try {
     await $fetch("/api/remove", {
       method: "POST",
@@ -34,6 +40,7 @@ async function remove(objectId, objectType) {
   } catch (error) {
     console.log(error);
   }
+  finish();
 }
 </script>
 
