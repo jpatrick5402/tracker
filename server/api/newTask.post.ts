@@ -6,13 +6,20 @@ export default defineEventHandler(async (event) => {
 
   const { project: project_id } = await readBody(event);
 
-  return sql`
-  WITH inserted_task AS (
+  if (project_id) {
+    return sql`
+    WITH inserted_task AS (
+      INSERT INTO tasks (id, name, description, status)
+      VALUES (DEFAULT, 'New Task', '', 'planning')
+      RETURNING id
+    )
+    INSERT INTO projects_tasks (task_id, project_id)
+    SELECT id, ${project_id} FROM inserted_task;
+    `;
+  } else {
+    return sql`
     INSERT INTO tasks (id, name, description, status)
     VALUES (DEFAULT, 'New Task', '', 'planning')
-    RETURNING id
-  )
-  INSERT INTO projects_tasks (task_id, project_id)
-  SELECT id, ${project_id} FROM inserted_task;
-  `;
+    `;
+  }
 });
