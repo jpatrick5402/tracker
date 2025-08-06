@@ -10,7 +10,19 @@ async function newProject() {
   }
 }
 
-async function newTask() {
+async function newTask(id) {
+  try {
+    await $fetch("/api/newTask", {
+      method: "POST",
+      body: JSON.stringify({ project: id }),
+    });
+    await refreshNuxtData("projectData");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function remove() {
   try {
     await $fetch("/api/newTask");
     await refreshNuxtData("projectData");
@@ -33,8 +45,12 @@ async function newTask() {
           <input :value="task.name" />
           <input :value="task.description" />
           <input :value="task.status" />
+          <Icon
+            name="material-symbols:delete-forever-outline-rounded"
+            @click="remove()"
+          />
         </li>
-        <button @click="newTask">Add Task</button>
+        <button @click="newTask(project.id)">Add Task</button>
       </details>
     </li>
     <button @click="newProject">Add Project</button>
