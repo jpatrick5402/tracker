@@ -48,8 +48,8 @@ const rotation = ref(270);
 
 <template v-else>
   <h1>My Data</h1>
-  <ul class="grid grid-cols-2">
-    <li v-for="project in projects">
+  <ul class="text-center">
+    <li v-for="project in projects" class="inline-block">
       <details class="flex m-3 bg-[#002FA7] border-white border-3 rounded-xl">
         <summary class="flex p-6">
           <div>
@@ -61,7 +61,10 @@ const rotation = ref(270);
             <input :value="project.name" />
             <input :value="project.description" />
             <input :value="project.description" />
-            <button @click="remove(project.id, 'project')" class="bg-red-500">
+            <button
+              @click="remove(project.id, 'project')"
+              class="bg-red-500 rounded p-2"
+            >
               <Icon name="material-symbols:delete-forever-outline-rounded" />
             </button>
           </div>
@@ -71,16 +74,23 @@ const rotation = ref(270);
             <input :value="task.name" />
             <input :value="task.description" />
             <input :value="task.status" />
-            <button @click="remove(task.id, 'task')">
+            <button
+              @click="remove(task.id, 'task')"
+              class="bg-red-500 rounded p-2"
+            >
               <Icon name="material-symbols:delete-forever-outline-rounded" />
             </button>
           </li>
-          <button @click="newTask(project.id)">Add Task</button>
+          <button @click="newTask(project.id)" class="bg-green-500 rounded p-2">
+            Add Task
+          </button>
         </div>
       </details>
     </li>
   </ul>
-  <button @click="newProject">Add Project</button>
+  <button @click="newProject" class="bg-green-500 rounded p-2">
+    Add Project
+  </button>
 </template>
 
 <style scoped>
