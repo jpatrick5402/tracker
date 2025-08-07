@@ -90,4 +90,10 @@ input {
   background-color: #ff4f00;
   margin: 3px;
 }
+
+@media (max-width: 1500px) {
+  ul {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
 </style>
