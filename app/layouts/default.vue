@@ -4,6 +4,16 @@ const links = [
   { name: "Home", path: "/" },
   { name: "Data", path: "/data" },
 ];
+
+import { github } from "better-auth/social-providers";
+import { authClient } from "~/lib/auth-client";
+
+async function GitHubTest() {
+  await authClient.signIn.social({
+    provider: github,
+    disableRedirect: true,
+  });
+}
 </script>
 
 <template>
@@ -12,7 +22,7 @@ const links = [
     <nav class="p-5">
       <button
         v-if="!isLoggedIn"
-        @click="isLoggedIn = !isLoggedIn"
+        @click="GitHubTest"
         class="bg-[#002FA7] p-2 rounded-xl"
       >
         Sign In
