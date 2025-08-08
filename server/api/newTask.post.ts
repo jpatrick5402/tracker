@@ -4,22 +4,27 @@ export default defineEventHandler(async (event) => {
   const { DB_URL } = useRuntimeConfig(event);
   const sql = neon(DB_URL);
 
-  const { project: project_id } = await readBody(event);
+  const { project_id, user_id } = await readBody(event);
 
   if (project_id) {
     return sql`
     WITH inserted_task AS (
-      INSERT INTO tasks (id, name, description, status)
+      INSERT INTO task (id, title, description, status)
       VALUES (DEFAULT, 'New Task', '', 'planning')
       RETURNING id
     )
-    INSERT INTO projects_tasks (task_id, project_id)
+    INSERT INTO join_project_task (task_id, project_id)
     SELECT id, ${project_id} FROM inserted_task;
     `;
   } else {
     return sql`
-    INSERT INTO tasks (id, name, description, status)
-    VALUES (DEFAULT, 'New Task', '', 'planning')
+    WITH inserted_task AS (
+      INSERT INTO task (id, title, description, status)
+      VALUES (DEFAULT, 'New Task', '', 'planning')
+      RETURNING id
+    )
+    INSERT INTO join_user_task (user_id, task_id)
+    SELECT id, ${user_id} FROM inserted_task;
     `;
   }
 });

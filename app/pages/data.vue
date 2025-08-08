@@ -1,52 +1,12 @@
 <script setup lang="ts">
+import { newProject, newTask, remove } from "@/lib/data";
+import { authClient } from "~/lib/auth-client";
 const { data: projects } = useNuxtData("projectData");
-const { start, finish } = useLoadingIndicator();
-
-async function newProject() {
-  start();
-  try {
-    await $fetch("/api/newProject", {
-      method: "POST",
-    });
-    await refreshNuxtData("projectData");
-  } catch (error) {
-    console.log(error);
-  }
-  finish();
-}
-
-async function newTask(id: number) {
-  start();
-  try {
-    await $fetch("/api/newTask", {
-      method: "POST",
-      body: JSON.stringify({ project: id }),
-    });
-    await refreshNuxtData("projectData");
-  } catch (error) {
-    console.log(error);
-  }
-  finish();
-}
-
-async function remove(objectId: number, objectType: string) {
-  start();
-  try {
-    await $fetch("/api/remove", {
-      method: "POST",
-      body: JSON.stringify({ type: objectType, id: objectId }),
-    });
-    await refreshNuxtData("projectData");
-  } catch (error) {
-    console.log(error);
-  }
-  finish();
-}
-
-const rotation = ref(270);
+const session = authClient.useSession();
 </script>
 
 <template v-else>
+  <button @click="console.log(session.data?.user.id)">Click</button>
   <h1>My Data</h1>
   <ul class="text-center">
     <li v-for="project in projects" class="inline-block">
@@ -71,7 +31,7 @@ const rotation = ref(270);
         </summary>
         <div class="bg-gray-800 p-4 rounded-xl border-3 border-black">
           <li v-for="task in project.tasks">
-            <input :value="task.name" />
+            <input :value="task.title" />
             <input :value="task.description" />
             <input :value="task.status" />
             <button

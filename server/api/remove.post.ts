@@ -7,14 +7,14 @@ export default defineEventHandler(async (event) => {
   const { type: type, id: id } = await readBody(event);
 
   if (type === "project") {
-    await sql`DELETE FROM users_projects WHERE project_id = ${id};`;
-    await sql`DELETE FROM projects_tasks WHERE project_id = ${id};`;
-    await sql`DELETE FROM projects WHERE id = ${id};`;
+    await sql`DELETE FROM join_user_project WHERE project_id = ${id};`;
+    await sql`DELETE FROM join_project_task WHERE project_id = ${id};`;
+    await sql`DELETE FROM project WHERE id = ${id};`;
     return new Response("Successfully removed");
   } else if (type === "task") {
-    await sql`DELETE FROM users_tasks WHERE task_id = ${id};`;
-    await sql`DELETE FROM projects_tasks WHERE task_id = ${id};`;
-    await sql`DELETE FROM tasks WHERE id = ${id};`;
+    await sql`DELETE FROM join_user_task WHERE task_id = ${id};`;
+    await sql`DELETE FROM join_project_task WHERE task_id = ${id};`;
+    await sql`DELETE FROM task WHERE id = ${id};`;
     return new Response("Successfully removed");
   } else {
     return new Error("incorrect parameters");

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const isLoggedIn = ref(false);
 const links = [
   { name: "Home", path: "/" },
   { name: "Data", path: "/data" },
