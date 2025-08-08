@@ -5,27 +5,39 @@ const links = [
   { name: "Data", path: "/data" },
 ];
 
-import { github } from "better-auth/social-providers";
 import { authClient } from "~/lib/auth-client";
 
-async function GitHubTest() {
-  await authClient.signIn.social({
-    provider: github,
-    disableRedirect: true,
-  });
-}
+const session = authClient.useSession();
 </script>
 
 <template>
   <NuxtLoadingIndicator />
   <span class="row">
     <nav class="p-5">
+      <img
+        v-if="session?.data"
+        :src="session?.data?.user?.image || ''"
+        alt="Profile Picture"
+      />
       <button
-        v-if="!isLoggedIn"
-        @click="GitHubTest"
+        v-if="!session?.data"
+        @click="
+          () =>
+            authClient.signIn.social({
+              provider: 'github',
+              callbackURL: '/data',
+            })
+        "
         class="bg-[#002FA7] p-2 rounded-xl"
       >
-        Sign In
+        Sign In with GitHub
+      </button>
+      <button
+        v-else
+        @click="() => authClient.signOut()"
+        class="bg-[#002FA7] p-2 rounded-xl"
+      >
+        Sign Out
       </button>
       <ul>
         <li v-for="link in links">
