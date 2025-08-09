@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
   const sql = neon(DB_URL);
 
   const { project_id, user_id } = await readBody(event);
+  console.log(project_id);
 
   if (project_id) {
     return sql`
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
       RETURNING id
     )
     INSERT INTO join_user_task (user_id, task_id)
-    SELECT id, ${user_id} FROM inserted_task;
+    SELECT ${user_id}, id FROM inserted_task;
     `;
   }
 });

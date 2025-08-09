@@ -3,9 +3,7 @@ const links = [
   { name: "Home", path: "/" },
   { name: "Data", path: "/data" },
 ];
-
 import { authClient } from "~/lib/auth-client";
-
 const session = authClient.useSession();
 </script>
 
@@ -14,9 +12,11 @@ const session = authClient.useSession();
   <span class="row">
     <nav class="p-5">
       <img
+        width="150px"
         v-if="session?.data"
         :src="session?.data?.user?.image || ''"
         alt="Profile Picture"
+        class="rounded-[50%] border-2 border-(--foreground)"
       />
       <button
         v-if="!session?.data"
@@ -33,7 +33,16 @@ const session = authClient.useSession();
       </button>
       <button
         v-else
-        @click="() => authClient.signOut()"
+        @click="
+          () =>
+            authClient.signOut({
+              fetchOptions: {
+                onSuccess: () => {
+                  return navigateTo('/') as Promise<void>;
+                },
+              },
+            })
+        "
         class="bg-[#002FA7] p-2 rounded-xl"
       >
         Sign Out

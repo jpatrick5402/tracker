@@ -16,7 +16,7 @@ export async function newProject() {
   finish();
 }
 
-export async function newTask(id: number) {
+export async function newTask(id?: string) {
   const { start, finish } = useLoadingIndicator();
   const session = authClient.useSession();
   start();
@@ -37,7 +37,6 @@ export async function newTask(id: number) {
 
 export async function remove(objectId: number, objectType: string) {
   const { start, finish } = useLoadingIndicator();
-  const session = authClient.useSession();
   start();
   try {
     await $fetch("/api/remove", {
