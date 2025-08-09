@@ -20,9 +20,9 @@ const { data } = useNuxtData("projectData");
                 }}
               </p>
               <div class="flex m-auto">
-                <input :value="project.name" placeholder="Project Name" />
+                <input v-model="project.name" placeholder="Project Name" />
                 <input
-                  :value="project.description"
+                  v-model="project.description"
                   placeholder="Project Description"
                 />
                 <button
@@ -39,12 +39,12 @@ const { data } = useNuxtData("projectData");
           <div class="bg-gray-800 p-4 rounded-xl border-3 border-black">
             <li v-for="task in project.tasks">
               <div class="flex">
-                <input :value="task.title" placeholder="Task Title" />
+                <input v-model="task.title" placeholder="Task Title" />
                 <input
-                  :value="task.description"
+                  v-model="task.description"
                   placeholder="Task Description"
                 />
-                <input :value="task.status" placeholder="Task Status" />
+                <input v-model="task.status" placeholder="Task Status" />
                 <button
                   @click="remove(task.id, 'task')"
                   class="bg-red-500 rounded p-2 align-center m-auto"
@@ -76,9 +76,9 @@ const { data } = useNuxtData("projectData");
       >
         <li v-for="task in data.tasks">
           <div class="flex">
-            <input :value="task.title" placeholder="Task Title" />
-            <input :value="task.description" placeholder="Task Description" />
-            <input :value="task.status" placeholder="Task Status" />
+            <input v-model="task.title" placeholder="Task Title" />
+            <input v-model="task.description" placeholder="Task Description" />
+            <input v-model="task.status" placeholder="Task Status" />
             <button
               @click="remove(task.id, 'task')"
               class="bg-red-500 rounded p-2 align-center m-auto"
