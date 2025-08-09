@@ -132,6 +132,13 @@ footer {
 
   nav {
     width: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  nav img {
+    max-height: 75px;
+    max-width: 75px;
   }
 
   nav ul {
