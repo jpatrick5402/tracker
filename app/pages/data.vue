@@ -7,7 +7,7 @@ const { data } = useNuxtData("projectData");
   <h1 class="text-3xl">My Data</h1>
   <div class="flex flex-row row">
     <ul class="text-center gap-2 flex flex-col mr-1">
-      <p>Projects & Associated Tasks</p>
+      <p>Projects: {{ data.projects.length }}</p>
       <li v-for="project in data.projects">
         <details
           class="flex flex-col bg-[#002FA7] border-white border-3 rounded-xl"
@@ -19,28 +19,36 @@ const { data } = useNuxtData("projectData");
                   (project.tasks !== null ? project.tasks.length : 0) + " tasks"
                 }}
               </p>
-              <input :value="project.name" />
-              <input :value="project.description" />
-              <input :value="project.description" />
-              <button
-                @click="remove(project.id, 'project')"
-                class="bg-red-500 rounded p-2"
-              >
-                <Icon name="material-symbols:delete-forever-outline-rounded" />
-              </button>
+              <div class="flex">
+                <input :value="project.name" />
+                <input :value="project.description" />
+                <input :value="project.description" />
+                <button
+                  @click="remove(project.id, 'project')"
+                  class="bg-red-500 rounded p-2 align-center m-auto"
+                >
+                  <Icon
+                    name="material-symbols:delete-forever-outline-rounded"
+                  />
+                </button>
+              </div>
             </div>
           </summary>
           <div class="bg-gray-800 p-4 rounded-xl border-3 border-black">
             <li v-for="task in project.tasks">
-              <input :value="task.title" />
-              <input :value="task.description" />
-              <input :value="task.status" />
-              <button
-                @click="remove(task.id, 'task')"
-                class="bg-red-500 rounded p-2"
-              >
-                <Icon name="material-symbols:delete-forever-outline-rounded" />
-              </button>
+              <div class="flex">
+                <input :value="task.title" />
+                <input :value="task.description" />
+                <input :value="task.status" />
+                <button
+                  @click="remove(task.id, 'task')"
+                  class="bg-red-500 rounded p-2 align-center m-auto"
+                >
+                  <Icon
+                    name="material-symbols:delete-forever-outline-rounded"
+                  />
+                </button>
+              </div>
             </li>
             <button
               @click="newTask(project.id)"
@@ -56,21 +64,23 @@ const { data } = useNuxtData("projectData");
       </button>
     </ul>
     <ul class="text-center flex flex-col gap-2 ml-1">
-      <p>Orphaned Tasks</p>
+      <p>Orphaned Tasks: {{ data.tasks.length }}</p>
       <div
         v-if="data.tasks.length > 0"
         class="bg-gray-800 p-4 rounded-xl border-3 border-black"
       >
         <li v-for="task in data.tasks">
-          <input :value="task.title" />
-          <input :value="task.description" />
-          <input :value="task.status" />
-          <button
-            @click="remove(task.id, 'task')"
-            class="bg-red-500 rounded p-2"
-          >
-            <Icon name="material-symbols:delete-forever-outline-rounded" />
-          </button>
+          <div class="flex">
+            <input :value="task.title" />
+            <input :value="task.description" />
+            <input :value="task.status" />
+            <button
+              @click="remove(task.id, 'task')"
+              class="bg-red-500 rounded p-2 align-center m-auto"
+            >
+              <Icon name="material-symbols:delete-forever-outline-rounded" />
+            </button>
+          </div>
         </li>
       </div>
       <button @click="newTask()" class="bg-green-500 rounded p-2">
