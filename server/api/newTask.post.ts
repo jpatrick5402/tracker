@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     const { id: task_id } = (
       await sql`
       INSERT INTO task (id, title, description, status)
-      VALUES (DEFAULT, 'New Task', '', 'planning')
+      VALUES (DEFAULT, '', '', '')
       RETURNING id;`
     )[0];
 
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     return sql`
     WITH inserted_task AS (
       INSERT INTO task (id, title, description, status)
-      VALUES (DEFAULT, 'New Task', '', 'planning')
+      VALUES (DEFAULT, '', '', '')
       RETURNING id
     )
     INSERT INTO join_user_task (user_id, task_id)

@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   return sql`
 WITH new_project AS (
   INSERT INTO project (name, description)
-  VALUES ('New Project', 'Description of the new project')
+  VALUES ('', '')
   RETURNING id
 )
 INSERT INTO join_user_project (user_id, project_id)

@@ -49,3 +49,5 @@ export async function remove(objectId: number, objectType: string) {
   }
   finish();
 }
+
+export async function save() {}

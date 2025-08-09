@@ -12,17 +12,19 @@ const { data } = useNuxtData("projectData");
         <details
           class="flex flex-col bg-[#002FA7] border-white border-3 rounded-xl"
         >
-          <summary class="flex p-6">
-            <div>
+          <summary class="block p-6">
+            <div class="flex flex-col">
               <p>
                 {{
                   (project.tasks !== null ? project.tasks.length : 0) + " tasks"
                 }}
               </p>
-              <div class="flex">
-                <input :value="project.name" />
-                <input :value="project.description" />
-                <input :value="project.description" />
+              <div class="flex m-auto">
+                <input :value="project.name" placeholder="Project Name" />
+                <input
+                  :value="project.description"
+                  placeholder="Project Description"
+                />
                 <button
                   @click="remove(project.id, 'project')"
                   class="bg-red-500 rounded p-2 align-center m-auto"
@@ -37,9 +39,12 @@ const { data } = useNuxtData("projectData");
           <div class="bg-gray-800 p-4 rounded-xl border-3 border-black">
             <li v-for="task in project.tasks">
               <div class="flex">
-                <input :value="task.title" />
-                <input :value="task.description" />
-                <input :value="task.status" />
+                <input :value="task.title" placeholder="Task Title" />
+                <input
+                  :value="task.description"
+                  placeholder="Task Description"
+                />
+                <input :value="task.status" placeholder="Task Status" />
                 <button
                   @click="remove(task.id, 'task')"
                   class="bg-red-500 rounded p-2 align-center m-auto"
@@ -71,9 +76,9 @@ const { data } = useNuxtData("projectData");
       >
         <li v-for="task in data.tasks">
           <div class="flex">
-            <input :value="task.title" />
-            <input :value="task.description" />
-            <input :value="task.status" />
+            <input :value="task.title" placeholder="Task Title" />
+            <input :value="task.description" placeholder="Task Description" />
+            <input :value="task.status" placeholder="Task Status" />
             <button
               @click="remove(task.id, 'task')"
               class="bg-red-500 rounded p-2 align-center m-auto"
