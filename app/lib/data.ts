@@ -50,4 +50,21 @@ export async function remove(objectId: number, objectType: string) {
   finish();
 }
 
-export async function save() {}
+export async function save(
+  type: string,
+  id: string,
+  field: string,
+  value: string
+) {
+  const { start, finish } = useLoadingIndicator();
+  start();
+  try {
+    await $fetch("/api/save", {
+      method: "POST",
+      body: JSON.stringify({ type, id, field, value }),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  finish();
+}

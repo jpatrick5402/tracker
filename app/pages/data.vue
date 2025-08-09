@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { newProject, newTask, remove } from "@/lib/data";
+import { newProject, newTask, remove, save } from "@/lib/data";
 const { data } = useNuxtData("projectData");
 </script>
 
@@ -20,9 +20,21 @@ const { data } = useNuxtData("projectData");
                 }}
               </p>
               <div class="flex m-auto">
-                <input v-model="project.name" placeholder="Project Name" />
+                <input
+                  v-model="project.name"
+                  @change="save('project', project.id, 'name', project.name)"
+                  placeholder="Project Name"
+                />
                 <input
                   v-model="project.description"
+                  @change="
+                    save(
+                      'project',
+                      project.id,
+                      'description',
+                      project.description
+                    )
+                  "
                   placeholder="Project Description"
                 />
                 <button
@@ -39,12 +51,23 @@ const { data } = useNuxtData("projectData");
           <div class="bg-gray-800 p-4 rounded-xl border-3 border-black">
             <li v-for="task in project.tasks">
               <div class="flex">
-                <input v-model="task.title" placeholder="Task Title" />
+                <input
+                  v-model="task.title"
+                  @change="save('task', task.id, 'title', task.title)"
+                  placeholder="Task Title"
+                />
                 <input
                   v-model="task.description"
+                  @change="
+                    save('task', task.id, 'description', task.description)
+                  "
                   placeholder="Task Description"
                 />
-                <input v-model="task.status" placeholder="Task Status" />
+                <input
+                  v-model="task.status"
+                  @change="save('task', task.id, 'status', task.status)"
+                  placeholder="Task Status"
+                />
                 <button
                   @click="remove(task.id, 'task')"
                   class="bg-red-500 rounded p-2 align-center m-auto"
@@ -76,9 +99,21 @@ const { data } = useNuxtData("projectData");
       >
         <li v-for="task in data.tasks">
           <div class="flex">
-            <input v-model="task.title" placeholder="Task Title" />
-            <input v-model="task.description" placeholder="Task Description" />
-            <input v-model="task.status" placeholder="Task Status" />
+            <input
+              v-model="task.title"
+              @change="save('task', task.id, 'title', task.title)"
+              placeholder="Task Title"
+            />
+            <input
+              v-model="task.description"
+              @change="save('task', task.id, 'description', task.description)"
+              placeholder="Task Description"
+            />
+            <input
+              v-model="task.status"
+              @change="save('task', task.id, 'status', task.status)"
+              placeholder="Task Status"
+            />
             <button
               @click="remove(task.id, 'task')"
               class="bg-red-500 rounded p-2 align-center m-auto"
