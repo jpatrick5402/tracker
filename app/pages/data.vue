@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { newProject, newTask, remove, save } from "@/lib/data";
+import { useDebounceFn } from "@vueuse/core";
 const { data } = useNuxtData("projectData");
 </script>
 
 <template v-else>
-  <h1 class="text-3xl">My Data</h1>
-  <div class="flex flex-row row">
-    <ul class="text-center gap-2 flex flex-col mr-1">
+  <h1 class="text-3xl ml-auto mr-auto">My Data</h1>
+  <div class="flex flex-row row gap-2">
+    <ul class="text-center gap-2 flex flex-col w-full">
       <p>Projects: {{ data.projects.length }}</p>
       <li v-for="project in data.projects">
         <details
@@ -22,12 +23,12 @@ const { data } = useNuxtData("projectData");
               <div class="flex m-auto">
                 <input
                   v-model="project.name"
-                  @change="save('project', project.id, 'name', project.name)"
+                  @input="save('project', project.id, 'name', project.name)"
                   placeholder="Project Name"
                 />
                 <input
                   v-model="project.description"
-                  @change="
+                  @input="
                     save(
                       'project',
                       project.id,
@@ -53,19 +54,19 @@ const { data } = useNuxtData("projectData");
               <div class="flex">
                 <input
                   v-model="task.title"
-                  @change="save('task', task.id, 'title', task.title)"
+                  @input="save('task', task.id, 'title', task.title)"
                   placeholder="Task Title"
                 />
                 <input
                   v-model="task.description"
-                  @change="
+                  @input="
                     save('task', task.id, 'description', task.description)
                   "
                   placeholder="Task Description"
                 />
                 <input
                   v-model="task.status"
-                  @change="save('task', task.id, 'status', task.status)"
+                  @input="save('task', task.id, 'status', task.status)"
                   placeholder="Task Status"
                 />
                 <button
@@ -91,8 +92,8 @@ const { data } = useNuxtData("projectData");
         Add Project
       </button>
     </ul>
-    <ul class="text-center flex flex-col gap-2 ml-1">
-      <p>Orphaned Tasks: {{ data.tasks.length }}</p>
+    <ul class="text-center flex flex-col gap-2 w-full">
+      <p>Orphan Tasks: {{ data.tasks.length }}</p>
       <div
         v-if="data.tasks.length > 0"
         class="bg-gray-800 p-4 rounded-xl border-3 border-black"
@@ -101,17 +102,17 @@ const { data } = useNuxtData("projectData");
           <div class="flex">
             <input
               v-model="task.title"
-              @change="save('task', task.id, 'title', task.title)"
+              @input="save('task', task.id, 'title', task.title)"
               placeholder="Task Title"
             />
             <input
               v-model="task.description"
-              @change="save('task', task.id, 'description', task.description)"
+              @input="save('task', task.id, 'description', task.description)"
               placeholder="Task Description"
             />
             <input
               v-model="task.status"
-              @change="save('task', task.id, 'status', task.status)"
+              @input="save('task', task.id, 'status', task.status)"
               placeholder="Task Status"
             />
             <button
@@ -145,6 +146,7 @@ input {
 
   .row {
     flex-direction: column;
+    gap: 40px;
   }
 }
 </style>

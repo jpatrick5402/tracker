@@ -9,8 +9,8 @@ const session = authClient.useSession();
 
 <template>
   <NuxtLoadingIndicator />
-  <span class="row">
-    <nav class="p-5">
+  <span class="row flex flex-row flex-1">
+    <nav class="p-5 gap-2 align-center width-[10%] flex-col flex bg-[#8d8258]">
       <img
         width="150px"
         v-if="session?.data"
@@ -47,17 +47,17 @@ const session = authClient.useSession();
       >
         Sign Out
       </button>
-      <ul>
+      <ul class="text-center flex flex-col gap-2">
         <li v-for="link in links">
           <NuxtLink :to="link.path">{{ link.name }}</NuxtLink>
         </li>
       </ul>
     </nav>
-    <main>
+    <main class="flex flex-col w-full p-2 text-center">
       <slot />
     </main>
   </span>
-  <footer>
+  <footer class="flex flex-row justify-center p-2 bg-[#005236]">
     <p>&copy 2025 Joseph Patrick</p>
   </footer>
 </template>
@@ -65,10 +65,6 @@ const session = authClient.useSession();
 <style>
 html {
   background-color: rgb(136, 136, 136);
-}
-
-body {
-  margin: 0px;
 }
 
 #__nuxt {
@@ -86,45 +82,6 @@ body {
 </style>
 
 <style scoped>
-.row {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-}
-
-nav {
-  background-color: rgb(141, 117, 88);
-  display: flex;
-  flex-direction: column;
-  width: 10%;
-  align-items: center;
-  gap: 10px;
-  padding: 6px;
-}
-
-nav ul {
-  display: flex;
-  flex-direction: column;
-  list-style-type: none;
-  padding: 0px;
-  margin: 0px;
-  gap: 10px;
-}
-
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-footer {
-  background-color: rgb(0, 82, 54);
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
 @media (max-width: 700px) {
   .row {
     flex-direction: column;
@@ -143,6 +100,8 @@ footer {
 
   nav ul {
     flex-direction: row;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
 </style>
