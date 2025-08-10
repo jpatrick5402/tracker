@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
     !event.path.startsWith("/api/auth") &&
     !event.path.startsWith("/api/projects")
   ) {
-    console.log("testing middleware");
     return createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
