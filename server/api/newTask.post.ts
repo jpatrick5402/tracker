@@ -1,22 +1,10 @@
 import { neon } from "@neondatabase/serverless";
-import { auth } from "~/lib/auth";
 
 export default defineEventHandler(async (event) => {
   const { DB_URL } = useRuntimeConfig(event);
   const sql = neon(DB_URL);
 
   const { project_id, user_id } = await readBody(event);
-
-  const session = await auth.api.getSession({
-    headers: event.headers,
-  });
-
-  if (!session?.user.id)
-    return createError({
-      statusCode: 401,
-      statusMessage: "Unauthorized",
-      message: "You must be logged in to perform this action.",
-    });
 
   if (project_id) {
     const { id: task_id } = (
