@@ -60,6 +60,7 @@ export const save = useDebounceFn(
         method: "POST",
         body: JSON.stringify({ type, id, field, value }),
       });
+      await refreshNuxtData("projectData");
     } catch (error) {
       console.log(error);
     }
