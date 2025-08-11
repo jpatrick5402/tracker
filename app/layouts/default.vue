@@ -1,8 +1,5 @@
 <script setup lang="ts">
-const links = [
-  { name: "Home", path: "/" },
-  { name: "Data", path: "/data" },
-];
+const links = [{ name: "Home", path: "/" }];
 import { authClient } from "~/lib/auth-client";
 const session = authClient.useSession();
 </script>
@@ -26,7 +23,7 @@ const session = authClient.useSession();
             () =>
               authClient.signIn.social({
                 provider: 'google',
-                callbackURL: '/data',
+                callbackURL: '/',
               })
           "
           class="bg-black border border-cyan-400 text-cyan-400 p-3 rounded-md hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,255,255,0.5)] hover:shadow-[0_0_20px_rgba(0,255,255,0.8)]"
@@ -38,7 +35,7 @@ const session = authClient.useSession();
             () =>
               authClient.signIn.social({
                 provider: 'github',
-                callbackURL: '/data',
+                callbackURL: '/',
               })
           "
           class="bg-black border border-cyan-400 text-cyan-400 p-3 rounded-md hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,255,255,0.5)] hover:shadow-[0_0_20px_rgba(0,255,255,0.8)]"
@@ -119,7 +116,7 @@ nav a:hover {
 </style>
 
 <style scoped>
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .row {
     flex-direction: column;
   }
