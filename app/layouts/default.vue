@@ -129,6 +129,8 @@ nav a:hover {
     width: 100%;
     flex-direction: row;
     justify-content: center;
+		border-bottom: 2px;
+		border-right: 0px;
   }
 
   nav img {
