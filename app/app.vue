@@ -6,7 +6,12 @@ const { data: session } = await authClient.useSession(useFetch);
 useFetch("/api/projects", {
   method: "POST",
   key: "projectData",
-  body: JSON.stringify({ user_id: session?.value?.user.id }),
+  body: JSON.stringify({
+    user_id: session?.value?.user.id,
+    project_sort: "created_at",
+    project_task_sort: "created_at",
+    orphan_task_sort: "created_at",
+  }),
 });
 </script>
 

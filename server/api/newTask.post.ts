@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const { DB_URL } = useRuntimeConfig(event);
   const sql = neon(DB_URL);
 
-  const { project_id, user_id } = await readBody(event);
+  const { user_id, project_id } = await readBody(event);
 
   if (project_id) {
     const { id: task_id } = (

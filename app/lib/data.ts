@@ -8,7 +8,9 @@ export async function newProject() {
   try {
     await $fetch("/api/newProject", {
       method: "POST",
-      body: JSON.stringify({ user_id: session.value.data?.user.id }),
+      body: JSON.stringify({
+        user_id: session.value.data?.user.id,
+      }),
     });
     await refreshNuxtData("projectData");
   } catch (error) {
@@ -66,5 +68,5 @@ export const save = useDebounceFn(
     }
     finish();
   },
-  1000
+  2000
 );

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { newProject, newTask, remove, save } from "@/lib/data";
-import { useDebounceFn } from "@vueuse/core";
 const { data } = useNuxtData("projectData");
 </script>
 
