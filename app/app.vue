@@ -22,6 +22,10 @@ useFetch("/api/projects", {
 <style>
 @import "tailwindcss";
 
+:root {
+ background-color: black;
+}
+
 html {
  background-color: black;
 }
