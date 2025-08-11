@@ -95,7 +95,10 @@ async function handleNewTask(projectId?: string) {
       </p>
       <li v-for="project in data.projects">
         <details
-          class="flex flex-col bg-black border-2 border-blue-500 rounded-lg shadow-[0_0_20px_rgba(0,100,255,0.4)] hover:shadow-[0_0_30px_rgba(0,100,255,0.6)] transition-all duration-300 mb-4"
+          class="flex flex-col bg-black border-2 border-blue-500 rounded-lg shadow-[0_0_20px_rgba(0,100,255,0.4)] hover:shadow-[0_0_30px_rgba(0,100,255,0.6)] transition-all duration-300 mb-4 drop-zone"
+          @dragover="handleDragOver"
+          @dragleave="handleDragLeave"
+          @drop="handleDrop($event, project.id)"
         >
           <summary
             class="block p-6 cursor-pointer text-blue-400 font-mono hover:text-white hover:bg-blue-900/20 rounded-t-lg transition-all duration-300"
@@ -140,10 +143,7 @@ async function handleNewTask(projectId?: string) {
             </div>
           </summary>
           <div
-            class="bg-black border-2 border-blue-500 p-4 rounded-lg shadow-[0_0_15px_rgba(0,100,255,0.3)] mt-2 drop-zone"
-            @dragover="handleDragOver"
-            @dragleave="handleDragLeave"
-            @drop="handleDrop($event, project.id)"
+            class="bg-black border-2 border-blue-500 p-4 rounded-lg shadow-[0_0_15px_rgba(0,100,255,0.3)] mt-2"
           >
             <li v-for="task in project.tasks">
               <div
