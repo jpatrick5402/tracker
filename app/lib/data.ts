@@ -53,6 +53,25 @@ export async function remove(objectId: number, objectType: string) {
   finish();
 }
 
+export async function moveTask(taskId: number, fromProjectId?: string, toProjectId?: string) {
+  const { start, finish } = useLoadingIndicator();
+  start();
+  try {
+    await $fetch("/api/moveTask", {
+      method: "POST",
+      body: JSON.stringify({
+        task_id: taskId,
+        from_project_id: fromProjectId,
+        to_project_id: toProjectId,
+      }),
+    });
+    await refreshNuxtData("projectData");
+  } catch (error) {
+    console.log(error);
+  }
+  finish();
+}
+
 export const save = useDebounceFn(
   async (type: string, id: string, field: string, value: string) => {
     const { start, finish } = useLoadingIndicator();
