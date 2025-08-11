@@ -4,12 +4,12 @@ import { authClient } from "./auth-client";
 export async function newProject() {
   const { start, finish } = useLoadingIndicator();
   const session = authClient.useSession();
-  
+
   // Check if user is authenticated
   if (!session.value.data?.user) {
-    throw new Error('AUTHENTICATION_REQUIRED');
+    throw new Error("AUTHENTICATION_REQUIRED");
   }
-  
+
   start();
   try {
     await $fetch("/api/newProject", {
@@ -21,7 +21,7 @@ export async function newProject() {
     await refreshNuxtData("projectData");
   } catch (error: any) {
     if (error.statusCode === 401) {
-      throw new Error('AUTHENTICATION_REQUIRED');
+      throw new Error("AUTHENTICATION_REQUIRED");
     }
     console.log(error);
     throw error;
@@ -32,12 +32,12 @@ export async function newProject() {
 export async function newTask(id?: string) {
   const { start, finish } = useLoadingIndicator();
   const session = authClient.useSession();
-  
+
   // Check if user is authenticated
   if (!session.value.data?.user) {
-    throw new Error('AUTHENTICATION_REQUIRED');
+    throw new Error("AUTHENTICATION_REQUIRED");
   }
-  
+
   start();
   try {
     await $fetch("/api/newTask", {
@@ -50,7 +50,7 @@ export async function newTask(id?: string) {
     await refreshNuxtData("projectData");
   } catch (error: any) {
     if (error.statusCode === 401) {
-      throw new Error('AUTHENTICATION_REQUIRED');
+      throw new Error("AUTHENTICATION_REQUIRED");
     }
     console.log(error);
     throw error;
@@ -73,7 +73,11 @@ export async function remove(objectId: number, objectType: string) {
   finish();
 }
 
-export async function moveTask(taskId: number, fromProjectId?: string, toProjectId?: string) {
+export async function moveTask(
+  taskId: number,
+  fromProjectId?: string,
+  toProjectId?: string
+) {
   const { start, finish } = useLoadingIndicator();
   start();
   try {
@@ -88,7 +92,7 @@ export async function moveTask(taskId: number, fromProjectId?: string, toProject
     await refreshNuxtData("projectData");
   } catch (error: any) {
     if (error.statusCode === 401) {
-      throw new Error('AUTHENTICATION_REQUIRED');
+      throw new Error("AUTHENTICATION_REQUIRED");
     }
     console.log(error);
     throw error;
@@ -96,20 +100,24 @@ export async function moveTask(taskId: number, fromProjectId?: string, toProject
   finish();
 }
 
-export const save = useDebounceFn(
-  async (type: string, id: string, field: string, value: string) => {
-    const { start, finish } = useLoadingIndicator();
-    start();
-    try {
-      await $fetch("/api/save", {
-        method: "POST",
-        body: JSON.stringify({ type, id, field, value }),
-      });
-      await refreshNuxtData("projectData");
-    } catch (error) {
-      console.log(error);
-    }
-    finish();
-  },
-  2000
-);
+const _saveFn = async (
+  type: string,
+  id: string,
+  field: string,
+  value: string
+) => {
+  const { start, finish } = useLoadingIndicator();
+  start();
+  try {
+    await $fetch("/api/save", {
+      method: "POST",
+      body: JSON.stringify({ type, id, field, value }),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  finish();
+};
+
+export const save = useDebounceFn(_saveFn, 2000);
+export const saveImmediately = _saveFn;

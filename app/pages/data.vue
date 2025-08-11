@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { newProject, newTask, remove, save, moveTask } from "@/lib/data";
+import { newProject, newTask, remove, save, saveImmediately, moveTask } from "@/lib/data";
 const { data } = useNuxtData("projectData");
 const { showAuthenticationError, showError } = useToast();
+
+const statusOptions = ["To Do", "In Progress", "Done", "Blocked", "Backlog"];
 
 // Drag and drop functionality
 const draggedTask = ref<any>(null);
@@ -86,8 +88,7 @@ async function handleNewTask(projectId?: string) {
 }
 </script>
 
-<template v-else>
-  <h1 class="text-4xl font-mono text-cyan-400 mb-8 tracking-wider">MY DATA</h1>
+<template>
   <div class="flex flex-row row gap-2">
     <ul class="text-center gap-2 flex flex-col w-full">
       <p class="text-xl font-mono text-blue-400 mb-4 tracking-wider">
@@ -117,12 +118,21 @@ async function handleNewTask(projectId?: string) {
                 <input
                   v-model="project.name"
                   @input="save('project', project.id, 'name', project.name)"
+                  @blur="saveImmediately('project', project.id, 'name', project.name)"
                   placeholder="Project Name"
                 />
                 <input
                   v-model="project.description"
                   @input="
                     save(
+                      'project',
+                      project.id,
+                      'description',
+                      project.description
+                    )
+                  "
+                  @blur="
+                    saveImmediately(
                       'project',
                       project.id,
                       'description',
@@ -156,6 +166,7 @@ async function handleNewTask(projectId?: string) {
                 <input
                   v-model="task.title"
                   @input="save('task', task.id, 'title', task.title)"
+                  @blur="saveImmediately('task', task.id, 'title', task.title)"
                   placeholder="Task Title"
                   class="project-task-input"
                 />
@@ -164,15 +175,26 @@ async function handleNewTask(projectId?: string) {
                   @input="
                     save('task', task.id, 'description', task.description)
                   "
+                  @blur="
+                    saveImmediately('task', task.id, 'description', task.description)
+                  "
                   placeholder="Task Description"
                   class="project-task-input"
                 />
-                <input
+                <select
                   v-model="task.status"
-                  @input="save('task', task.id, 'status', task.status)"
-                  placeholder="Task Status"
+                  @change="saveImmediately('task', task.id, 'status', task.status)"
                   class="project-task-input"
-                />
+                >
+                  <option disabled value="">Select status</option>
+                  <option
+                    v-for="option in statusOptions"
+                    :key="option"
+                    :value="option"
+                  >
+                    {{ option }}
+                  </option>
+                </select>
                 <button
                   @click="remove(task.id, 'task')"
                   class="tron-button tron-button-red"
@@ -200,7 +222,9 @@ async function handleNewTask(projectId?: string) {
       </button>
     </ul>
     <ul class="text-center flex flex-col gap-2 w-full">
-      <p class="text-xl font-mono text-red-500 mb-4 tracking-wider">
+      <p
+        class="text-xl font-mono text-red-500 mb-4 tracking-wider shadow-[0_0_10px_rgba(255,0,0,0.4)]"
+      >
         ORPHAN TASKS: {{ data.tasks.length }}
       </p>
       <div
@@ -226,21 +250,31 @@ async function handleNewTask(projectId?: string) {
             <input
               v-model="task.title"
               @input="save('task', task.id, 'title', task.title)"
+              @blur="saveImmediately('task', task.id, 'title', task.title)"
               placeholder="Task Title"
               class="task-input"
             />
             <input
               v-model="task.description"
               @input="save('task', task.id, 'description', task.description)"
+              @blur="saveImmediately('task', task.id, 'description', task.description)"
               placeholder="Task Description"
               class="task-input"
             />
-            <input
+            <select
               v-model="task.status"
-              @input="save('task', task.id, 'status', task.status)"
-              placeholder="Task Status"
+              @change="saveImmediately('task', task.id, 'status', task.status)"
               class="task-input"
-            />
+            >
+              <option disabled value="">Select status</option>
+              <option
+                v-for="option in statusOptions"
+                :key="option"
+                :value="option"
+              >
+                {{ option }}
+              </option>
+            </select>
             <button
               @click="remove(task.id, 'task')"
               class="tron-button tron-button-red"
@@ -258,8 +292,9 @@ async function handleNewTask(projectId?: string) {
 </template>
 
 <style scoped>
-/* Tron-inspired input styling */
-input {
+/* Tron-inspired input and select styling */
+input,
+select {
   background: transparent;
   border: 1px solid #00ffff;
   border-radius: 4px;
@@ -270,6 +305,26 @@ input {
   font-size: 14px;
   box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
   transition: all 0.3s ease;
+}
+
+/* Select-specific styling */
+select {
+  background-color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+}
+
+select option {
+  background-color: black;
+  color: #00ffff;
+  padding: 8px;
+}
+
+select option:hover {
+  background-color: rgba(0, 255, 255, 0.1);
+}
+
+select option[disabled] {
+  color: rgba(0, 255, 255, 0.5);
 }
 
 input::placeholder {
