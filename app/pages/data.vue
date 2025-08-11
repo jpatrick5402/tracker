@@ -47,10 +47,10 @@ async function handleDrop(event: DragEvent, targetProjectId?: string) {
   try {
     await moveTask(taskId, fromProjectId!, toProjectId!);
   } catch (error: any) {
-    if (error.message === 'AUTHENTICATION_REQUIRED') {
+    if (error.message === "AUTHENTICATION_REQUIRED") {
       showAuthenticationError();
     } else {
-      showError('Failed to move task. Please try again.');
+      showError("Failed to move task. Please try again.");
       console.error("Failed to move task:", error);
     }
   }
@@ -63,11 +63,11 @@ async function handleNewProject() {
   try {
     await newProject();
   } catch (error: any) {
-    if (error.message === 'AUTHENTICATION_REQUIRED') {
+    if (error.message === "AUTHENTICATION_REQUIRED") {
       showAuthenticationError();
     } else {
-      showError('Failed to create project. Please try again.');
-      console.error('Failed to create project:', error);
+      showError("Failed to create project. Please try again.");
+      console.error("Failed to create project:", error);
     }
   }
 }
@@ -76,27 +76,21 @@ async function handleNewTask(projectId?: string) {
   try {
     await newTask(projectId);
   } catch (error: any) {
-    if (error.message === 'AUTHENTICATION_REQUIRED') {
+    if (error.message === "AUTHENTICATION_REQUIRED") {
       showAuthenticationError();
     } else {
-      showError('Failed to create task. Please try again.');
-      console.error('Failed to create task:', error);
+      showError("Failed to create task. Please try again.");
+      console.error("Failed to create task:", error);
     }
   }
 }
 </script>
 
 <template v-else>
-  <h1
-    class="text-4xl font-mono text-cyan-400 mb-8 tracking-wider shadow-[0_0_20px_rgba(0,255,255,0.4)]"
-  >
-    MY DATA
-  </h1>
+  <h1 class="text-4xl font-mono text-cyan-400 mb-8 tracking-wider">MY DATA</h1>
   <div class="flex flex-row row gap-2">
     <ul class="text-center gap-2 flex flex-col w-full">
-      <p
-        class="text-xl font-mono text-blue-400 mb-4 tracking-wider shadow-[0_0_10px_rgba(0,100,255,0.4)]"
-      >
+      <p class="text-xl font-mono text-blue-400 mb-4 tracking-wider">
         PROJECTS: {{ data.projects.length }}
       </p>
       <li v-for="project in data.projects">
@@ -198,14 +192,15 @@ async function handleNewTask(projectId?: string) {
           </div>
         </details>
       </li>
-      <button @click="handleNewProject" class="tron-button tron-button-blue mt-4">
+      <button
+        @click="handleNewProject"
+        class="tron-button tron-button-blue mt-4"
+      >
         Add Project
       </button>
     </ul>
     <ul class="text-center flex flex-col gap-2 w-full">
-      <p
-        class="text-xl font-mono text-red-500 mb-4 tracking-wider shadow-[0_0_10px_rgba(255,0,0,0.4)]"
-      >
+      <p class="text-xl font-mono text-red-500 mb-4 tracking-wider">
         ORPHAN TASKS: {{ data.tasks.length }}
       </p>
       <div
