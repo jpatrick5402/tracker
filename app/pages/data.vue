@@ -4,21 +4,24 @@ const { data } = useNuxtData("projectData");
 </script>
 
 <template v-else>
-  <h1 class="text-3xl ml-auto mr-auto">My Data</h1>
+  <h1 class="text-4xl font-mono text-cyan-400 mb-8 tracking-wider shadow-[0_0_20px_rgba(0,255,255,0.4)]">MY DATA</h1>
   <div class="flex flex-row row gap-2">
     <ul class="text-center gap-2 flex flex-col w-full">
-      <p>Projects: {{ data.projects.length }}</p>
+      <p class="text-xl font-mono text-blue-400 mb-4 tracking-wider shadow-[0_0_10px_rgba(0,100,255,0.4)]">PROJECTS: {{ data.projects.length }}</p>
       <li v-for="project in data.projects">
         <details
-          class="flex flex-col bg-[#002FA7] border-white border-3 rounded-xl"
+          class="flex flex-col bg-black border-2 border-blue-500 rounded-lg shadow-[0_0_20px_rgba(0,100,255,0.4)] hover:shadow-[0_0_30px_rgba(0,100,255,0.6)] transition-all duration-300 mb-4"
         >
-          <summary class="block p-6">
+          <summary class="block p-6 cursor-pointer text-blue-400 font-mono hover:text-white hover:bg-blue-900/20 rounded-t-lg transition-all duration-300">
             <div class="flex flex-col">
-              <p>
-                {{
-                  (project.tasks !== null ? project.tasks.length : 0) + " tasks"
-                }}
-              </p>
+              <div class="flex items-center justify-center mb-2">
+                <span class="dropdown-arrow mr-2">▶</span>
+                <p>
+                  {{
+                    (project.tasks !== null ? project.tasks.length : 0) + " tasks"
+                  }}
+                </p>
+              </div>
               <div class="flex m-auto">
                 <input
                   v-model="project.name"
@@ -39,7 +42,7 @@ const { data } = useNuxtData("projectData");
                 />
                 <button
                   @click="remove(project.id, 'project')"
-                  class="bg-red-500 rounded p-2 align-center m-auto"
+                  class="tron-button tron-button-red"
                 >
                   <Icon
                     name="material-symbols:delete-forever-outline-rounded"
@@ -48,13 +51,14 @@ const { data } = useNuxtData("projectData");
               </div>
             </div>
           </summary>
-          <div class="bg-gray-800 p-4 rounded-xl border-3 border-black">
+          <div class="bg-black border-2 border-blue-500 p-4 rounded-lg shadow-[0_0_15px_rgba(0,100,255,0.3)] mt-2">
             <li v-for="task in project.tasks">
               <div class="flex">
                 <input
                   v-model="task.title"
                   @input="save('task', task.id, 'title', task.title)"
                   placeholder="Task Title"
+                  class="project-task-input"
                 />
                 <input
                   v-model="task.description"
@@ -62,15 +66,17 @@ const { data } = useNuxtData("projectData");
                     save('task', task.id, 'description', task.description)
                   "
                   placeholder="Task Description"
+                  class="project-task-input"
                 />
                 <input
                   v-model="task.status"
                   @input="save('task', task.id, 'status', task.status)"
                   placeholder="Task Status"
+                  class="project-task-input"
                 />
                 <button
                   @click="remove(task.id, 'task')"
-                  class="bg-red-500 rounded p-2 align-center m-auto"
+                  class="tron-button tron-button-red"
                 >
                   <Icon
                     name="material-symbols:delete-forever-outline-rounded"
@@ -80,22 +86,22 @@ const { data } = useNuxtData("projectData");
             </li>
             <button
               @click="newTask(project.id)"
-              class="bg-green-500 rounded p-2"
+              class="tron-button tron-button-blue mt-4"
             >
               Add Task
             </button>
           </div>
         </details>
       </li>
-      <button @click="newProject" class="bg-green-500 rounded p-2">
+      <button @click="newProject" class="tron-button tron-button-blue mt-4">
         Add Project
       </button>
     </ul>
     <ul class="text-center flex flex-col gap-2 w-full">
-      <p>Orphan Tasks: {{ data.tasks.length }}</p>
+      <p class="text-xl font-mono text-red-500 mb-4 tracking-wider shadow-[0_0_10px_rgba(255,0,0,0.4)]">ORPHAN TASKS: {{ data.tasks.length }}</p>
       <div
         v-if="data.tasks.length > 0"
-        class="bg-gray-800 p-4 rounded-xl border-3 border-black"
+        class="bg-black border-2 border-red-500 p-4 rounded-lg shadow-[0_0_20px_rgba(255,0,0,0.4)] hover:shadow-[0_0_30px_rgba(255,0,0,0.6)] transition-all duration-300 mb-4"
       >
         <li v-for="task in data.tasks">
           <div class="flex">
@@ -103,27 +109,30 @@ const { data } = useNuxtData("projectData");
               v-model="task.title"
               @input="save('task', task.id, 'title', task.title)"
               placeholder="Task Title"
+              class="task-input"
             />
             <input
               v-model="task.description"
               @input="save('task', task.id, 'description', task.description)"
               placeholder="Task Description"
+              class="task-input"
             />
             <input
               v-model="task.status"
               @input="save('task', task.id, 'status', task.status)"
               placeholder="Task Status"
+              class="task-input"
             />
             <button
               @click="remove(task.id, 'task')"
-              class="bg-red-500 rounded p-2 align-center m-auto"
+              class="tron-button tron-button-red"
             >
               <Icon name="material-symbols:delete-forever-outline-rounded" />
             </button>
           </div>
         </li>
       </div>
-      <button @click="newTask()" class="bg-green-500 rounded p-2">
+      <button @click="newTask()" class="tron-button tron-button-red mt-4">
         Add Task
       </button>
     </ul>
@@ -131,11 +140,124 @@ const { data } = useNuxtData("projectData");
 </template>
 
 <style scoped>
+/* Tron-inspired input styling */
 input {
-  border-radius: 10px;
-  padding: 6px;
-  background-color: #ff4f00;
-  margin: 3px;
+  background: transparent;
+  border: 1px solid #00ffff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 4px;
+  color: #00ffff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+input::placeholder {
+  color: rgba(0, 255, 255, 0.5);
+}
+
+input:focus {
+  outline: none;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  color: #ffffff;
+}
+
+/* Light blue inputs for project task fields */
+.project-task-input {
+  border-color: #00ffff;
+  color: #00ffff;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+}
+
+.project-task-input::placeholder {
+  color: rgba(0, 255, 255, 0.5);
+}
+
+.project-task-input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  color: #ffffff;
+}
+
+/* Light blue inputs for orphan task fields */
+.task-input {
+  border-color: #00ffff;
+  color: #00ffff;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+}
+
+.task-input::placeholder {
+  color: rgba(0, 255, 255, 0.5);
+}
+
+.task-input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  color: #ffffff;
+}
+
+/* Dropdown arrow animation */
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+  color: #0064ff;
+  font-size: 16px;
+}
+
+details[open] .dropdown-arrow {
+  transform: rotate(90deg);
+}
+
+/* Button styling */
+.tron-button {
+  background: transparent;
+  border: 2px solid;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tron-button-blue {
+  border-color: #0064ff;
+  color: #0064ff;
+  box-shadow: 0 0 10px rgba(0, 100, 255, 0.3);
+}
+
+.tron-button-blue:hover {
+  background: #0064ff;
+  color: black;
+  box-shadow: 0 0 20px rgba(0, 100, 255, 0.6);
+}
+
+.tron-button-red {
+  border-color: #ff0040;
+  color: #ff0040;
+  box-shadow: 0 0 10px rgba(255, 0, 64, 0.3);
+}
+
+.tron-button-red:hover {
+  background: #ff0040;
+  color: black;
+  box-shadow: 0 0 20px rgba(255, 0, 64, 0.6);
+}
+
+.tron-button-green {
+  border-color: #00ff80;
+  color: #00ff80;
+  box-shadow: 0 0 10px rgba(0, 255, 128, 0.3);
+}
+
+.tron-button-green:hover {
+  background: #00ff80;
+  color: black;
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.6);
 }
 
 @media (max-width: 1560px) {
