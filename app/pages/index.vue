@@ -111,56 +111,49 @@ async function handleNewTask(projectId?: string) {
           <summary
             class="block p-6 cursor-pointer text-blue-400 font-mono hover:text-white hover:bg-blue-900/20 rounded-t-lg transition-all duration-300"
           >
-            <div class="flex flex-col">
-              <div class="flex items-center justify-center mb-2">
-                <span class="dropdown-arrow mr-2">▶</span>
-                <p>
-                  {{
-                    (project.tasks !== null ? project.tasks.length : 0) +
-                    " tasks"
-                  }}
-                </p>
-              </div>
-              <div class="flex m-auto">
-                <input
-                  v-model="project.name"
-                  @input="save('project', project.id, 'name', project.name)"
-                  @blur="
-                    saveImmediately('project', project.id, 'name', project.name)
-                  "
-                  placeholder="Project Name"
-                  class="w-full"
-                />
-                <input
-                  v-model="project.description"
-                  @input="
-                    save(
-                      'project',
-                      project.id,
-                      'description',
-                      project.description
-                    )
-                  "
-                  @blur="
-                    saveImmediately(
-                      'project',
-                      project.id,
-                      'description',
-                      project.description
-                    )
-                  "
-                  placeholder="Project Description"
-                  class="w-full"
-                />
-                <button
-                  @click="remove(project.id, 'project')"
-                  class="tron-button tron-button-red"
-                >
-                  <Icon
-                    name="material-symbols:delete-forever-outline-rounded"
-                  />
-                </button>
-              </div>
+            <div class="flex items-center justify-center mb-2">
+              <span class="dropdown-arrow mr-2">▶</span>
+              <p class="m-2">
+                {{
+                  (project.tasks !== null ? project.tasks.length : 0) + " tasks"
+                }}
+              </p>
+              <input
+                v-model="project.name"
+                @input="save('project', project.id, 'name', project.name)"
+                @blur="
+                  saveImmediately('project', project.id, 'name', project.name)
+                "
+                placeholder="Project Name"
+                class="w-full"
+              />
+              <input
+                v-model="project.description"
+                @input="
+                  save(
+                    'project',
+                    project.id,
+                    'description',
+                    project.description
+                  )
+                "
+                @blur="
+                  saveImmediately(
+                    'project',
+                    project.id,
+                    'description',
+                    project.description
+                  )
+                "
+                placeholder="Project Description"
+                class="w-full"
+              />
+              <button
+                @click="remove(project.id, 'project')"
+                class="tron-button tron-button-red"
+              >
+                <Icon name="material-symbols:delete-forever-outline-rounded" />
+              </button>
             </div>
           </summary>
           <div
