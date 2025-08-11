@@ -4,6 +4,12 @@ import { authClient } from "./auth-client";
 export async function newProject() {
   const { start, finish } = useLoadingIndicator();
   const session = authClient.useSession();
+  
+  // Check if user is authenticated
+  if (!session.value.data?.user) {
+    throw new Error('AUTHENTICATION_REQUIRED');
+  }
+  
   start();
   try {
     await $fetch("/api/newProject", {
@@ -13,8 +19,12 @@ export async function newProject() {
       }),
     });
     await refreshNuxtData("projectData");
-  } catch (error) {
+  } catch (error: any) {
+    if (error.statusCode === 401) {
+      throw new Error('AUTHENTICATION_REQUIRED');
+    }
     console.log(error);
+    throw error;
   }
   finish();
 }
@@ -22,6 +32,12 @@ export async function newProject() {
 export async function newTask(id?: string) {
   const { start, finish } = useLoadingIndicator();
   const session = authClient.useSession();
+  
+  // Check if user is authenticated
+  if (!session.value.data?.user) {
+    throw new Error('AUTHENTICATION_REQUIRED');
+  }
+  
   start();
   try {
     await $fetch("/api/newTask", {
@@ -32,8 +48,12 @@ export async function newTask(id?: string) {
       }),
     });
     await refreshNuxtData("projectData");
-  } catch (error) {
+  } catch (error: any) {
+    if (error.statusCode === 401) {
+      throw new Error('AUTHENTICATION_REQUIRED');
+    }
     console.log(error);
+    throw error;
   }
   finish();
 }
@@ -66,8 +86,12 @@ export async function moveTask(taskId: number, fromProjectId?: string, toProject
       }),
     });
     await refreshNuxtData("projectData");
-  } catch (error) {
+  } catch (error: any) {
+    if (error.statusCode === 401) {
+      throw new Error('AUTHENTICATION_REQUIRED');
+    }
     console.log(error);
+    throw error;
   }
   finish();
 }

@@ -10,7 +10,9 @@ const session = authClient.useSession();
 <template>
   <NuxtLoadingIndicator />
   <span class="row flex flex-row flex-1">
-<nav class="p-5 gap-2 align-center width-[10%] flex-col flex bg-black border-r-2 border-cyan-400 shadow-[2px_0_10px_rgba(0,255,255,0.3)]">
+    <nav
+      class="p-5 gap-2 align-center width-[10%] flex-col flex bg-black border-r-2 border-cyan-400 shadow-[2px_0_10px_rgba(0,255,255,0.3)]"
+    >
       <img
         width="150px"
         v-if="session?.data"
@@ -18,19 +20,32 @@ const session = authClient.useSession();
         alt="Profile Picture"
         class="rounded-[50%] border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,255,255,0.6)]"
       />
-      <button
-        v-if="!session?.data"
-        @click="
-          () =>
-            authClient.signIn.social({
-              provider: 'github',
-              callbackURL: '/data',
-            })
-        "
-        class="bg-black border border-cyan-400 text-cyan-400 p-3 rounded-md hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,255,255,0.5)] hover:shadow-[0_0_20px_rgba(0,255,255,0.8)]"
-      >
-        Sign In with GitHub
-      </button>
+      <div v-if="!session?.data" class="flex flex-col login-links">
+        <button
+          @click="
+            () =>
+              authClient.signIn.social({
+                provider: 'google',
+                callbackURL: '/data',
+              })
+          "
+          class="bg-black border border-cyan-400 text-cyan-400 p-3 rounded-md hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,255,255,0.5)] hover:shadow-[0_0_20px_rgba(0,255,255,0.8)]"
+        >
+          Sign In with Google
+        </button>
+        <button
+          @click="
+            () =>
+              authClient.signIn.social({
+                provider: 'github',
+                callbackURL: '/data',
+              })
+          "
+          class="bg-black border border-cyan-400 text-cyan-400 p-3 rounded-md hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(0,255,255,0.5)] hover:shadow-[0_0_20px_rgba(0,255,255,0.8)]"
+        >
+          Sign In with GitHub
+        </button>
+      </div>
       <button
         v-else
         @click="
@@ -53,19 +68,24 @@ const session = authClient.useSession();
         </li>
       </ul>
     </nav>
-    <main class="flex flex-col w-full p-6 text-center bg-gradient-to-br from-gray-900 to-black text-cyan-400">
+    <main
+      class="flex flex-col w-full p-6 text-center bg-gradient-to-br from-gray-900 to-black text-cyan-400"
+    >
       <slot />
     </main>
   </span>
-  <footer class="flex flex-row justify-center p-4 bg-black border-t-2 border-cyan-400 shadow-[0_-2px_10px_rgba(0,255,255,0.3)] text-cyan-400">
+  <footer
+    class="flex flex-row justify-center p-4 bg-black border-t-2 border-cyan-400 shadow-[0_-2px_10px_rgba(0,255,255,0.3)] text-cyan-400"
+  >
     <p>&copy 2025 Joseph Patrick</p>
   </footer>
+  <ToastContainer />
 </template>
 
 <style>
 html {
   background: linear-gradient(135deg, #000000 0%, #001122 50%, #000011 100%);
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 #__nuxt {
@@ -102,6 +122,10 @@ nav a:hover {
 @media (max-width: 700px) {
   .row {
     flex-direction: column;
+  }
+
+  .login-links {
+    flex-direction: row;
   }
 
   nav {

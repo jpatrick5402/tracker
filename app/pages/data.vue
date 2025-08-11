@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { newProject, newTask, remove, save, moveTask } from "@/lib/data";
 const { data } = useNuxtData("projectData");
+const { showAuthenticationError, showError } = useToast();
 
 // Drag and drop functionality
 const draggedTask = ref<any>(null);
@@ -45,11 +46,43 @@ async function handleDrop(event: DragEvent, targetProjectId?: string) {
 
   try {
     await moveTask(taskId, fromProjectId!, toProjectId!);
-  } catch (error) {
-    console.error("Failed to move task:", error);
+  } catch (error: any) {
+    if (error.message === 'AUTHENTICATION_REQUIRED') {
+      showAuthenticationError();
+    } else {
+      showError('Failed to move task. Please try again.');
+      console.error("Failed to move task:", error);
+    }
   }
 
   handleDragEnd();
+}
+
+// Error handling wrapper functions
+async function handleNewProject() {
+  try {
+    await newProject();
+  } catch (error: any) {
+    if (error.message === 'AUTHENTICATION_REQUIRED') {
+      showAuthenticationError();
+    } else {
+      showError('Failed to create project. Please try again.');
+      console.error('Failed to create project:', error);
+    }
+  }
+}
+
+async function handleNewTask(projectId?: string) {
+  try {
+    await newTask(projectId);
+  } catch (error: any) {
+    if (error.message === 'AUTHENTICATION_REQUIRED') {
+      showAuthenticationError();
+    } else {
+      showError('Failed to create task. Please try again.');
+      console.error('Failed to create task:', error);
+    }
+  }
 }
 </script>
 
@@ -157,7 +190,7 @@ async function handleDrop(event: DragEvent, targetProjectId?: string) {
               </div>
             </li>
             <button
-              @click="newTask(project.id)"
+              @click="handleNewTask(project.id)"
               class="tron-button tron-button-blue mt-4"
             >
               Add Task
@@ -165,7 +198,7 @@ async function handleDrop(event: DragEvent, targetProjectId?: string) {
           </div>
         </details>
       </li>
-      <button @click="newProject" class="tron-button tron-button-blue mt-4">
+      <button @click="handleNewProject" class="tron-button tron-button-blue mt-4">
         Add Project
       </button>
     </ul>
@@ -222,7 +255,7 @@ async function handleDrop(event: DragEvent, targetProjectId?: string) {
           </div>
         </li>
       </div>
-      <button @click="newTask()" class="tron-button tron-button-red mt-4">
+      <button @click="handleNewTask()" class="tron-button tron-button-red mt-4">
         Add Task
       </button>
     </ul>
