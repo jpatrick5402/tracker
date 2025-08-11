@@ -418,6 +418,9 @@ details[open] .dropdown-arrow {
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tron-button-blue {
@@ -467,7 +470,6 @@ details[open] .dropdown-arrow {
 
 .draggable-task:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
 }
 
 .draggable-task:active {
