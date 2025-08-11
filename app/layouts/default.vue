@@ -129,7 +129,7 @@ nav a:hover {
     width: 100%;
     flex-direction: row;
     justify-content: center;
-		border-bottom: 8px solid;
+		border-bottom: 2px solid;
 		border-right: 0px;
   }
 
