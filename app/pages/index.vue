@@ -42,7 +42,7 @@ const sortDirectionOptions = [
 // Function to refresh data with new sorting
 async function refreshDataWithSorting() {
   const { data: session } = await authClient.useSession(useFetch);
-  
+
   try {
     const newData = await $fetch("/api/projects", {
       method: "POST",
@@ -56,11 +56,10 @@ async function refreshDataWithSorting() {
         orphan_task_sort_dir: orphanTaskSortDir.value,
       }),
     });
-    
+
     // Update the cached data directly
     const nuxtData = useNuxtData("projectData");
     nuxtData.data.value = newData;
-    
   } catch (error: any) {
     if (error.statusCode === 401) {
       showAuthenticationError();
@@ -71,9 +70,19 @@ async function refreshDataWithSorting() {
   }
 }
 // Watch for sorting changes
-watch([projectSort, projectTaskSort, orphanTaskSort, projectSortDir, projectTaskSortDir, orphanTaskSortDir], () => {
-  refreshDataWithSorting();
-});
+watch(
+  [
+    projectSort,
+    projectTaskSort,
+    orphanTaskSort,
+    projectSortDir,
+    projectTaskSortDir,
+    orphanTaskSortDir,
+  ],
+  () => {
+    refreshDataWithSorting();
+  }
+);
 
 // Drag and drop functionality
 const draggedTask = ref<any>(null);
@@ -171,12 +180,10 @@ async function handleNewTask(projectId?: string) {
       >
         <div class="flex items-center justify-center">
           <span class="sort-dropdown-arrow mr-2">▶</span>
-          <h2 class="text-xl tracking-wider">
-            SORTING OPTIONS
-          </h2>
+          <h2 class="text-xl tracking-wider">SORTING OPTIONS</h2>
         </div>
       </summary>
-      
+
       <div class="p-6 pt-2">
         <!-- Combined Sort Options -->
         <div class="flex flex-wrap gap-4 justify-center">
@@ -197,12 +204,14 @@ async function handleNewTask(projectId?: string) {
                   {{ option.label }}
                 </option>
               </select>
-              <button 
-                @click="projectSortDir = projectSortDir === 'ASC' ? 'DESC' : 'ASC'"
+              <button
+                @click="
+                  projectSortDir = projectSortDir === 'ASC' ? 'DESC' : 'ASC'
+                "
                 class="sort-direction-button"
                 :title="projectSortDir === 'ASC' ? 'Ascending' : 'Descending'"
               >
-                {{ projectSortDir === 'ASC' ? '▲' : '▼' }}
+                {{ projectSortDir === "ASC" ? "▲" : "▼" }}
               </button>
             </div>
           </div>
@@ -226,12 +235,17 @@ async function handleNewTask(projectId?: string) {
                   {{ option.label }}
                 </option>
               </select>
-              <button 
-                @click="projectTaskSortDir = projectTaskSortDir === 'ASC' ? 'DESC' : 'ASC'"
+              <button
+                @click="
+                  projectTaskSortDir =
+                    projectTaskSortDir === 'ASC' ? 'DESC' : 'ASC'
+                "
                 class="sort-direction-button"
-                :title="projectTaskSortDir === 'ASC' ? 'Ascending' : 'Descending'"
+                :title="
+                  projectTaskSortDir === 'ASC' ? 'Ascending' : 'Descending'
+                "
               >
-                {{ projectTaskSortDir === 'ASC' ? '▲' : '▼' }}
+                {{ projectTaskSortDir === "ASC" ? "▲" : "▼" }}
               </button>
             </div>
           </div>
@@ -255,12 +269,17 @@ async function handleNewTask(projectId?: string) {
                   {{ option.label }}
                 </option>
               </select>
-              <button 
-                @click="orphanTaskSortDir = orphanTaskSortDir === 'ASC' ? 'DESC' : 'ASC'"
+              <button
+                @click="
+                  orphanTaskSortDir =
+                    orphanTaskSortDir === 'ASC' ? 'DESC' : 'ASC'
+                "
                 class="sort-direction-button"
-                :title="orphanTaskSortDir === 'ASC' ? 'Ascending' : 'Descending'"
+                :title="
+                  orphanTaskSortDir === 'ASC' ? 'Ascending' : 'Descending'
+                "
               >
-                {{ orphanTaskSortDir === 'ASC' ? '▲' : '▼' }}
+                {{ orphanTaskSortDir === "ASC" ? "▲" : "▼" }}
               </button>
             </div>
           </div>
@@ -575,9 +594,9 @@ input:focus {
 /* Sort dropdown styling */
 .sort-dropdown {
   background-color: rgba(0, 0, 0, 0.9);
-  border: 2px solid #ff6900;
-  color: #ff6900;
-  box-shadow: 0 0 10px rgba(139, 0, 255, 0.3);
+  border: 2px solid #00ffff;
+  color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
   min-width: 160px;
   font-weight: bold;
   text-align: center;
@@ -585,21 +604,21 @@ input:focus {
 
 .sort-dropdown:focus {
   border-color: #ffffff;
-  box-shadow: 0 0 15px rgba(139, 0, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
   color: #ffffff;
 }
 
 .sort-dropdown option {
   background-color: black;
-  color: #ff6900;
+  color: #00ffff;
   font-weight: bold;
 }
 
 /* Sort direction button styling */
 .sort-direction-button {
   background: transparent;
-  border: 2px solid #ff6900;
-  color: #ff6900;
+  border: 2px solid #00ffff;
+  color: #00ffff;
   border-radius: 4px;
   padding: 8px 12px;
   cursor: pointer;
@@ -607,7 +626,7 @@ input:focus {
   font-size: 16px;
   font-weight: bold;
   transition: all 0.3s ease;
-  box-shadow: 0 0 5px rgba(255, 105, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
   min-width: 44px;
   height: 44px;
   display: flex;
@@ -616,8 +635,8 @@ input:focus {
 }
 
 .sort-direction-button:hover {
-  background: rgba(255, 105, 0, 0.1);
-  box-shadow: 0 0 10px rgba(255, 105, 0, 0.6);
+  background: rgba(0, 225, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
   transform: scale(1.1);
 }
 
@@ -625,9 +644,8 @@ input:focus {
   outline: none;
   border-color: #ffffff;
   color: #ffffff;
-  box-shadow: 0 0 15px rgba(255, 105, 0, 0.8);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
 }
-
 
 /* Sort dropdown arrow animation */
 .sort-dropdown-arrow {
