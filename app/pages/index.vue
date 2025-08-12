@@ -7,6 +7,7 @@ import {
   saveImmediately,
   moveTask,
 } from "@/lib/data";
+import nuxtStorage from "nuxt-storage";
 import { authClient } from "@/lib/auth-client";
 const { data } = useNuxtData("projectData");
 const { showAuthenticationError, showError } = useToast();
@@ -23,6 +24,21 @@ const projectSortDir = useState("projectSortDir", () => "ASC");
 const projectTaskSortDir = useState("projectTaskSortDir", () => "ASC");
 const orphanTaskSortDir = useState("orphanTaskSortDir", () => "ASC");
 
+if (import.meta.client) {
+  projectSort.value =
+    nuxtStorage.localStorage.getData("projectSort") || "created_at";
+  projectTaskSort.value =
+    nuxtStorage.localStorage.getData("projectTaskSort") || "created_at";
+  orphanTaskSort.value =
+    nuxtStorage.localStorage.getData("orphanTaskSort") || "created_at";
+  projectSortDir.value =
+    nuxtStorage.localStorage.getData("projectSortDir") || "ASC";
+  projectTaskSortDir.value =
+    nuxtStorage.localStorage.getData("projectTaskSortDir") || "ASC";
+  orphanTaskSortDir.value =
+    nuxtStorage.localStorage.getData("orphanTaskSortDir") || "ASC";
+}
+
 // Collapsible sorting state
 const sortingCollapsed = ref(true);
 
@@ -34,16 +50,24 @@ const sortOptions = [
   { value: "description", label: "Description" },
 ];
 
-const sortDirectionOptions = [
-  { value: "ASC", label: "Ascending" },
-  { value: "DESC", label: "Descending" },
-];
-
 // Function to refresh data with new sorting
 async function refreshDataWithSorting() {
   const { data: session } = await authClient.useSession(useFetch);
 
   try {
+    nuxtStorage.localStorage.setData("projectSort", projectSort.value);
+    nuxtStorage.localStorage.setData("projectTaskSort", projectTaskSort.value);
+    nuxtStorage.localStorage.setData("orphanTaskSort", orphanTaskSort.value);
+    nuxtStorage.localStorage.setData("projectSortDir", projectSortDir.value);
+    nuxtStorage.localStorage.setData(
+      "projectTaskSortDir",
+      projectTaskSortDir.value
+    );
+    nuxtStorage.localStorage.setData(
+      "orphanTaskSortDir",
+      orphanTaskSortDir.value
+    );
+
     const newData = await $fetch("/api/projects", {
       method: "POST",
       body: JSON.stringify({
@@ -447,7 +471,7 @@ async function handleNewTask(projectId?: string) {
           </div>
           <li v-for="task in data.tasks">
             <div
-              class="flex draggable-task"
+              class="flex draggable-task justify-center items-center"
               draggable="true"
               @dragstart="handleDragStart(task)"
               @dragend="handleDragEnd"
