@@ -24,7 +24,7 @@ const projectTaskSortDir = useState("projectTaskSortDir", () => "ASC");
 const orphanTaskSortDir = useState("orphanTaskSortDir", () => "ASC");
 
 // Collapsible sorting state
-const sortingCollapsed = ref(false);
+const sortingCollapsed = ref(true);
 
 const sortOptions = [
   { value: "created_at", label: "Date Created" },
@@ -318,9 +318,9 @@ async function handleNewTask(projectId?: string) {
                     saveImmediately('project', project.id, 'name', project.name)
                   "
                   placeholder="Project Name"
-                  class="w-full"
+                  class="project-input w-full"
                 />
-                <input
+                <textarea
                   v-model="project.description"
                   @input="
                     save(
@@ -339,7 +339,7 @@ async function handleNewTask(projectId?: string) {
                     )
                   "
                   placeholder="Project Description"
-                  class="w-full"
+                  class="w-full p-2 project-input"
                 />
                 <button
                   @click="remove(project.id, 'project')"
@@ -371,7 +371,7 @@ async function handleNewTask(projectId?: string) {
                     placeholder="Task Title"
                     class="project-task-input w-full"
                   />
-                  <input
+                  <textarea
                     v-model="task.description"
                     @input="
                       save('task', task.id, 'description', task.description)
@@ -385,7 +385,7 @@ async function handleNewTask(projectId?: string) {
                       )
                     "
                     placeholder="Task Description"
-                    class="project-task-input w-full"
+                    class="project-task-input w-full p-2"
                   />
                   <select
                     v-model="task.status"
@@ -460,7 +460,7 @@ async function handleNewTask(projectId?: string) {
                 placeholder="Task Title"
                 class="task-input w-full"
               />
-              <input
+              <textarea
                 v-model="task.description"
                 @input="save('task', task.id, 'description', task.description)"
                 @blur="
@@ -472,7 +472,7 @@ async function handleNewTask(projectId?: string) {
                   )
                 "
                 placeholder="Task Description"
-                class="task-input w-full"
+                class="task-input w-full p-2"
               />
               <select
                 v-model="task.status"
@@ -558,7 +558,19 @@ input:focus {
 }
 
 /* Light blue inputs for project task fields */
+.project-input {
+  margin: 4px;
+  border: 2px solid;
+  border-radius: 8px;
+  border-color: #00ffff;
+  color: #00ffff;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+}
+
 .project-task-input {
+  margin: 4px;
+  border: 2px solid;
+  border-radius: 8px;
   border-color: #00ffff;
   color: #00ffff;
   box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
@@ -576,6 +588,9 @@ input:focus {
 
 /* Light blue inputs for orphan task fields */
 .task-input {
+  margin: 4px;
+  border: 2px solid;
+  border-radius: 8px;
   border-color: #00ffff;
   color: #00ffff;
   box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
