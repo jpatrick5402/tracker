@@ -9,16 +9,14 @@ import {
 } from "@/lib/data";
 import nuxtStorage from "nuxt-storage";
 import { authClient } from "@/lib/auth-client";
+
 const { data } = useNuxtData("projectData");
 const { showAuthenticationError, showError } = useToast();
-
 const statusOptions = ["Backlog", "To Do", "In Progress", "Blocked", "Done"];
-
 // Sorting state - using useState for shared state with data.ts
 const projectSort = useState("projectSort", () => "created_at");
 const projectTaskSort = useState("projectTaskSort", () => "created_at");
 const orphanTaskSort = useState("orphanTaskSort", () => "created_at");
-
 // Sort direction state - using useState for shared state with data.ts
 const projectSortDir = useState("projectSortDir", () => "ASC");
 const projectTaskSortDir = useState("projectTaskSortDir", () => "ASC");
