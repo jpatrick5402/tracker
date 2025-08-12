@@ -46,14 +46,16 @@ const session = authClient.useSession();
       <button
         v-else
         @click="
-          () =>
+          () => {
             authClient.signOut({
               fetchOptions: {
                 onSuccess: () => {
-                  return navigateTo('/') as Promise<void>;
+                  clearNuxtData();
+                  return reloadNuxtApp({ path: '/', force: true });
                 },
               },
-            })
+            });
+          }
         "
         class="bg-black border border-red-500 text-red-500 p-3 rounded-md hover:bg-red-500 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(255,0,0,0.5)] hover:shadow-[0_0_20px_rgba(255,0,0,0.8)]"
       >
@@ -129,8 +131,8 @@ nav a:hover {
     width: 100%;
     flex-direction: row;
     justify-content: center;
-		border-bottom: 2px solid;
-		border-right: 0px;
+    border-bottom: 2px solid;
+    border-right: 0px;
   }
 
   nav img {

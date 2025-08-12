@@ -11,6 +11,9 @@ useFetch("/api/projects", {
     project_sort: "created_at",
     project_task_sort: "created_at",
     orphan_task_sort: "created_at",
+    project_sort_dir: "ASC",
+    project_task_sort_dir: "ASC",
+    orphan_task_sort_dir: "ASC",
   }),
 });
 </script>

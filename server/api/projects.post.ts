@@ -4,8 +4,23 @@ export default defineEventHandler(async (event) => {
   const { DB_URL } = useRuntimeConfig(event);
   const sql = neon(DB_URL);
 
-  const { user_id, project_sort, project_task_sort, orphan_task_sort } =
+  const { user_id, project_sort, project_task_sort, orphan_task_sort, project_sort_dir, project_task_sort_dir, orphan_task_sort_dir } =
     await readBody(event);
+
+  const getProjectTaskOrderBy = () => {
+    if (project_task_sort === 'status') {
+      return `
+        CASE t.status
+          WHEN 'Backlog' THEN 1
+          WHEN 'To Do' THEN 2
+          WHEN 'In Progress' THEN 3
+          WHEN 'Blocked' THEN 4
+          WHEN 'Done' THEN 5
+          ELSE 6
+        END ${project_task_sort_dir || 'ASC'}`;
+    }
+    return `t.${project_task_sort} ${project_task_sort_dir || 'ASC'}`;
+  };
 
   const project_query = `
 SELECT p.id, p.name, p.description, p.created_at,
@@ -19,7 +34,7 @@ CASE
                'status', t.status,
                'created_at', t.created_at
            )
-          ORDER BY t.${project_task_sort} ASC
+          ORDER BY ${getProjectTaskOrderBy()}
        )
     ELSE NULL
   END AS tasks
@@ -29,8 +44,23 @@ LEFT JOIN join_project_task jpt ON p.id = jpt.project_id
 LEFT JOIN task t ON jpt.task_id = t.id
 WHERE jup.user_id = '${user_id}'
 GROUP BY p.id, p.name, p.description, p.created_at
-ORDER BY p.${project_sort} ASC;
+ORDER BY p.${project_sort} ${project_sort_dir || 'ASC'};
   `;
+
+  const getOrphanTaskOrderBy = () => {
+    if (orphan_task_sort === 'status') {
+      return `
+        CASE t.status
+          WHEN 'Backlog' THEN 1
+          WHEN 'To Do' THEN 2
+          WHEN 'In Progress' THEN 3
+          WHEN 'Blocked' THEN 4
+          WHEN 'Done' THEN 5
+          ELSE 6
+        END ${orphan_task_sort_dir || 'ASC'}`;
+    }
+    return `t.${orphan_task_sort} ${orphan_task_sort_dir || 'ASC'}`;
+  };
 
   const orphan_task_query = `
     SELECT t.* FROM task t
@@ -38,7 +68,7 @@ LEFT JOIN join_project_task jpt ON t.id = jpt.task_id
 JOIN join_user_task jut ON t.id = jut.task_id
 WHERE jpt.project_id IS NULL
 AND jut.user_id = '${user_id}'
-ORDER BY t.${orphan_task_sort} ASC;
+ORDER BY ${getOrphanTaskOrderBy()};
     `;
 
   return {
