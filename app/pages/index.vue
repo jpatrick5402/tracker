@@ -14,14 +14,14 @@ const { showAuthenticationError, showError } = useToast();
 const statusOptions = ["Backlog", "To Do", "In Progress", "Blocked", "Done"];
 
 // Sorting state - using useState for shared state with data.ts
-const projectSort = useState('projectSort', () => 'created_at');
-const projectTaskSort = useState('projectTaskSort', () => 'created_at');
-const orphanTaskSort = useState('orphanTaskSort', () => 'created_at');
+const projectSort = useState("projectSort", () => "created_at");
+const projectTaskSort = useState("projectTaskSort", () => "created_at");
+const orphanTaskSort = useState("orphanTaskSort", () => "created_at");
 
 // Sort direction state - using useState for shared state with data.ts
-const projectSortDir = useState('projectSortDir', () => 'ASC');
-const projectTaskSortDir = useState('projectTaskSortDir', () => 'ASC');
-const orphanTaskSortDir = useState('orphanTaskSortDir', () => 'ASC');
+const projectSortDir = useState("projectSortDir", () => "ASC");
+const projectTaskSortDir = useState("projectTaskSortDir", () => "ASC");
+const orphanTaskSortDir = useState("orphanTaskSortDir", () => "ASC");
 
 // Collapsible sorting state
 const sortingCollapsed = ref(false);
@@ -415,7 +415,7 @@ async function handleNewTask(projectId?: string) {
               </li>
               <button
                 @click="handleNewTask(project.id)"
-                class="tron-button tron-button-blue mt-4"
+                class="tron-button tron-button-blue mt-4 mr-auto ml-auto"
               >
                 Add Task
               </button>
