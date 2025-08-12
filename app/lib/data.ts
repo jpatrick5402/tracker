@@ -1,6 +1,50 @@
 import { useDebounceFn } from "@vueuse/core";
 import { authClient } from "./auth-client";
 
+// Function to refresh data with current sorting settings
+async function refreshDataWithCurrentSorting() {
+  const session = authClient.useSession();
+  
+  // Check if user is authenticated
+  if (!session.value.data?.user) {
+    throw new Error("AUTHENTICATION_REQUIRED");
+  }
+
+  // Get current sorting settings from the page state if available
+  // These will be the reactive refs from the index.vue page
+  const projectSort = useState('projectSort', () => 'created_at');
+  const projectTaskSort = useState('projectTaskSort', () => 'created_at');
+  const orphanTaskSort = useState('orphanTaskSort', () => 'created_at');
+  const projectSortDir = useState('projectSortDir', () => 'ASC');
+  const projectTaskSortDir = useState('projectTaskSortDir', () => 'ASC');
+  const orphanTaskSortDir = useState('orphanTaskSortDir', () => 'ASC');
+
+  try {
+    const newData = await $fetch("/api/projects", {
+      method: "POST",
+      body: JSON.stringify({
+        user_id: session.value.data?.user.id,
+        project_sort: projectSort.value,
+        project_task_sort: projectTaskSort.value,
+        orphan_task_sort: orphanTaskSort.value,
+        project_sort_dir: projectSortDir.value,
+        project_task_sort_dir: projectTaskSortDir.value,
+        orphan_task_sort_dir: orphanTaskSortDir.value,
+      }),
+    });
+
+    // Update the cached data directly
+    const nuxtData = useNuxtData("projectData");
+    nuxtData.data.value = newData;
+  } catch (error: any) {
+    if (error.statusCode === 401) {
+      throw new Error("AUTHENTICATION_REQUIRED");
+    }
+    console.error("Failed to refresh data with sorting:", error);
+    throw error;
+  }
+}
+
 export async function newProject() {
   const { start, finish } = useLoadingIndicator();
   const session = authClient.useSession();
@@ -18,7 +62,8 @@ export async function newProject() {
         user_id: session.value.data?.user.id,
       }),
     });
-    await refreshNuxtData("projectData");
+    // Use the sorting-aware refresh instead of basic refresh
+    await refreshDataWithCurrentSorting();
   } catch (error: any) {
     if (error.statusCode === 401) {
       throw new Error("AUTHENTICATION_REQUIRED");
@@ -47,7 +92,8 @@ export async function newTask(id?: string) {
         user_id: session.value.data?.user.id,
       }),
     });
-    await refreshNuxtData("projectData");
+    // Use the sorting-aware refresh instead of basic refresh
+    await refreshDataWithCurrentSorting();
   } catch (error: any) {
     if (error.statusCode === 401) {
       throw new Error("AUTHENTICATION_REQUIRED");
@@ -66,7 +112,8 @@ export async function remove(objectId: number, objectType: string) {
       method: "POST",
       body: JSON.stringify({ type: objectType, id: objectId }),
     });
-    await refreshNuxtData("projectData");
+    // Use the sorting-aware refresh instead of basic refresh
+    await refreshDataWithCurrentSorting();
   } catch (error) {
     console.log(error);
   }
@@ -89,7 +136,8 @@ export async function moveTask(
         to_project_id: toProjectId,
       }),
     });
-    await refreshNuxtData("projectData");
+    // Use the sorting-aware refresh instead of basic refresh
+    await refreshDataWithCurrentSorting();
   } catch (error: any) {
     if (error.statusCode === 401) {
       throw new Error("AUTHENTICATION_REQUIRED");
@@ -113,6 +161,12 @@ const _saveFn = async (
       method: "POST",
       body: JSON.stringify({ type, id, field, value }),
     });
+    
+    // If the field being updated is related to sorting, refresh with current sorting
+    // This ensures changes like name, status, etc. immediately reflect in the sorted list
+    if (['name', 'title', 'status', 'description'].includes(field)) {
+      await refreshDataWithCurrentSorting();
+    }
   } catch (error) {
     console.log(error);
   }
@@ -121,3 +175,6 @@ const _saveFn = async (
 
 export const save = useDebounceFn(_saveFn, 2000);
 export const saveImmediately = _saveFn;
+
+// Export the refreshDataWithCurrentSorting function for use elsewhere
+export { refreshDataWithCurrentSorting };

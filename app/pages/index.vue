@@ -11,17 +11,17 @@ import { authClient } from "@/lib/auth-client";
 const { data } = useNuxtData("projectData");
 const { showAuthenticationError, showError } = useToast();
 
-const statusOptions = ["To Do", "In Progress", "Done", "Blocked", "Backlog"];
+const statusOptions = ["Backlog", "To Do", "In Progress", "Blocked", "Done"];
 
-// Sorting state
-const projectSort = ref("created_at");
-const projectTaskSort = ref("created_at");
-const orphanTaskSort = ref("created_at");
+// Sorting state - using useState for shared state with data.ts
+const projectSort = useState('projectSort', () => 'created_at');
+const projectTaskSort = useState('projectTaskSort', () => 'created_at');
+const orphanTaskSort = useState('orphanTaskSort', () => 'created_at');
 
-// Sort direction state
-const projectSortDir = ref("ASC");
-const projectTaskSortDir = ref("ASC");
-const orphanTaskSortDir = ref("ASC");
+// Sort direction state - using useState for shared state with data.ts
+const projectSortDir = useState('projectSortDir', () => 'ASC');
+const projectTaskSortDir = useState('projectTaskSortDir', () => 'ASC');
+const orphanTaskSortDir = useState('orphanTaskSortDir', () => 'ASC');
 
 // Collapsible sorting state
 const sortingCollapsed = ref(false);
